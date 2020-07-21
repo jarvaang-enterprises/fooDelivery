@@ -3,7 +3,8 @@ const e = require("express")
 exports.minimumPermissionLevelRequired = (rpl) => {
     return (req, res, next) => {
         let upl = parseInt(req.jwt.permissionLevel)
-        if (upl == rpl) {
+        let opl = parseInt(req.jwt.otherPermissionLevel)
+        if (upl == rpl || opl == rpl) {
             next()
         } else {
             return res.status(403).send("Minimum permission level not met");
@@ -23,7 +24,7 @@ exports.onlySameUserCanDoThisAction = (req, res, next) => {
 exports.onlySameUserOrAdminCanDoThisAction = (req, res, next) =>{
     let upl = parseInt(req.jwt.permissionLevel)
     let uId = req.jwt.userId
-    if(req.params && req.params.userId === uId) {
+    if(req.params && req.params.userId == uId) {
         return next()
     } else {
         if(upl === ADMIN_PERMISSION) {

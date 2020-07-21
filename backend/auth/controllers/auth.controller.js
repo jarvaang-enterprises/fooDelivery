@@ -6,12 +6,13 @@ const uuid = require('uuid')
 var refreshTokens = {}
 
 exports.login = (req, res) => {
+    console.warn(req.body)
     try {
-        let refreshId = req.body.userId + jwtSecret;
+        let refreshId = req.body.userId + JWT_S;
         let salt = crypto.randomBytes(16).toString('base64')
         let hash = crypto.createHmac('sha512', salt).update(refreshId).digest('base64')
         req.body.refreshKey = salt
-        let token = jwt.sign(req.body, jwtSecret)
+        let token = jwt.sign(req.body, JWT_S)
         let b = new Buffer(hash)
         let refresh_token = b.toString('base64')
         res.status(201).send({accessId: req.body.userId, accessToken: token, refreshToken: refresh_token})

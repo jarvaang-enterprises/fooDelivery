@@ -11,12 +11,18 @@ const ALL = process.env.PERMISSION_ALL
 const VERSION = process.env.API_VERSION
 
 exports.routesConfig = (app) => {
+    app.get(VERSION + '/users/list', [
+        ValidationMiddleware.validJWTNeeded,
+        PermissionMiddleware.minimumPermissionLevelRequired(ADMIN),
+        UsersController.list
+    ])
+
     app.get(VERSION + '/users/:userId', [
         ValidationMiddleware.validJWTNeeded,
         PermissionMiddleware.minimumPermissionLevelRequired(ALL),
         PermissionMiddleware.onlySameUserOrAdminCanDoThisAction,
         UsersController.getById
-    ]);
+    ])
 
     app.post(VERSION + '/users/:userId', [
         ValidationMiddleware.validJWTNeeded,
@@ -27,11 +33,5 @@ exports.routesConfig = (app) => {
 
     app.post(VERSION + '/users', [
         UsersController.insert
-    ])
-
-    app.get(VERSION + '/users/', [
-        ValidationMiddleware.validJWTNeeded,
-        PermissionMiddleware.minimumPermissionLevelRequired(ADMIN),
-        UsersController.list
     ])
 }

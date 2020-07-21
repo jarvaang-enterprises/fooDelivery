@@ -6,10 +6,11 @@ const userSchema = new Schema({
     firstName: String,
     lastName: String,
     email: String,
-    password: String,
+    passwd: String,
     // location?: String,
     tmpPassword: String,
-    permissionLevel: Number
+    permissionLevel: Number,
+    otherPermissionLevel: Number
 });
 
 userSchema.virtual('id').get(function(){
@@ -57,9 +58,20 @@ exports.patchUser = (id, userData) => {
     })
 }
 
-// exports.list = (perPage, page) => {
-//     return new Promise((res, rej))
-// }
+exports.list = (perPage, page) => {
+    return new Promise((resolve, reject) => {
+        userModel.find()
+            .limit(perPage)
+            .skip(perPage * page)
+            .exec(function (err, users) {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(users)
+                }
+            })
+    })
+}
 
 exports.removeById = (userId) => {
     return new Promise((resolve, reject) => {
@@ -76,5 +88,5 @@ exports.removeById = (userId) => {
 }
 
 exports.findByEmail = (e) => {
-    return userModel.find({ email: email })
+    return userModel.find({ email: e })
 }
