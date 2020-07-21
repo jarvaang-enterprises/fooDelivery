@@ -1,0 +1,31 @@
+{
+  "name": "food_delivery_boiler_backend",
+  "version": "1.0.0",
+  "description": "The REST API to handle all database operations.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "rest",
+    "api",
+    "mongodb"
+  ],
+  "author": "Junior Lawrence Kibirige, Godana Emiru",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.24.0",
+    "moment-timezone": "^0.5.27",
+    "mongoose": "^5.7.9",
+    "mysql": "^2.18.1",
+    "swagger-ui-express": "^4.1.2",
+    "sync-request": "^6.1.0",
+    "uuid": "^3.3.3"
+  }
+}
