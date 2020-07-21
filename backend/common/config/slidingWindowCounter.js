@@ -39,6 +39,14 @@ class TokenBucket {
     }
 }
 
+/** 
+ * Request Limiting in API
+ * Function responsible for limiting all api requests provided to the app
+ * @param per5Minutes
+ * @param maxBurst
+ * 
+ * @returns void
+*/
 exports.limitRequests = (per5Minutes, maxBurst) => {
     const bucket = new Map();
 

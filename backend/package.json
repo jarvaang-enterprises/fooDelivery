@@ -2,11 +2,13 @@
   "name": "food_delivery_boiler_backend",
   "version": "1.0.0",
   "description": "The REST API to handle all database operations.",
+  "email": "aanga26@gmail.com, egodana@cis.mak.ac.ug",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
+    "foodDelivery",
     "nodejs",
     "express",
     "rest",
@@ -14,7 +16,11 @@
     "mongodb"
   ],
   "author": "Junior Lawrence Kibirige, Godana Emiru",
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jarvaang-enterprises/fooDelivery/backend"
+  },
+  "license": "",
   "dependencies": {
     "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",

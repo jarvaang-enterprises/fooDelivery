@@ -7,7 +7,6 @@ const userSchema = new Schema({
     lastName: String,
     email: String,
     passwd: String,
-    // location?: String,
     tmpPassword: String,
     permissionLevel: Number,
     otherPermissionLevel: Number
