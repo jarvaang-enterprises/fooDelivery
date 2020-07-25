@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fooddeliveryboiler/locator.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
   try {
     await setupLocator();
     runApp(MyApp());
@@ -24,6 +23,7 @@ class MyApp extends StatelessWidget {
       // home: OrderConfirmationPage(orderId: "5d08072955d61889804b9de0",),
       // home: HomeScreen(),
       home: MyHomePage(title: 'Food Delivery Boiler'),
+      // home: SplashScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

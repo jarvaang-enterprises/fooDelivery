@@ -12,7 +12,7 @@ class Network {
   final JsonDecoder _decoder = new JsonDecoder();
 
   // ignore: non_constant_identifier_names
-  static final BASE_URL = "http://192.168.43.199";
+  static final BASE_URL = "http://localhost:5500";
   // ignore: non_constant_identifier_names
   static final API_VERSION = "/api/v1";
 

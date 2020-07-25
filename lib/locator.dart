@@ -9,8 +9,6 @@ import 'core/viewModels/menu.dart';
 
 GetIt locator = GetIt();
 
-// TODO: Finish setupLocator
-
 Future setupLocator() async {
   locator.registerFactory(() => LoginModel());
 

@@ -7,11 +7,13 @@ var bodyParser = require('body-parser')
 
 const AuthRouter = require('./auth/routes.config')
 const UserRouter = require('./users/routes.config')
+const OrderRouter = require('./orders/routes.config')
+const RestaurantRouter = require('./restaurant/routes.config')
 
 app.use( (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*')
     res.header('Access-Control-Allow-Credentials', 'true')
-    res.header('Access-Control-Allow-Methods', 'GET, POST', 'DELETE')
+    res.header('Access-Control-Allow-Methods', 'GET, POST', 'DELETE', 'UPDATE')
     res.header('Access-Control-Allow-Expose-Headers', 'Content-Length')
     res.header('Access-Control-Allow-Headers', 'Accept, x-api-key, Content-Type, X-Requested-With, Range')
 
@@ -37,6 +39,8 @@ if(process.env.ENV != 'dev')
 // Configurations for all routes used by api
 AuthRouter.routesConfig(app)
 UserRouter.routesConfig(app)
+OrderRouter.routeConfig(app)
+RestaurantRouter.routeConfig(app)
 
 app.listen(process.env.PORT, _ => {
     console.log('API Server is listening at port %s', process.env.PORT)
