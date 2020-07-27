@@ -6,8 +6,6 @@ const VERSION = process.env.API_VERSION
 
 exports.routeConfig = (app) => {
     app.get(VERSION + '/qeats/restaurants', [
-        ValidationMiddleware.validJWTNeeded,
-        PermissionMiddleware.minimumPermissionLevelRequired(process.env.PERMISSION_ALL),
         RestaurantController.restaurantList
     ])
 

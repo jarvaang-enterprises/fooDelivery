@@ -12,12 +12,13 @@ class Network {
   final JsonDecoder _decoder = new JsonDecoder();
 
   // ignore: non_constant_identifier_names
-  static final BASE_URL = "http://localhost:5500";
+  static final BASE_URL = "http://192.168.43.9:5500";
   // ignore: non_constant_identifier_names
   static final API_VERSION = "/api/v1";
 
   Future<dynamic> get(String url) {
     String completeUrl = BASE_URL + API_VERSION + url;
+    print(completeUrl);
 
     return http.get(completeUrl).then((http.Response response) {
       final String res = response.body;

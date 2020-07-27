@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fooddeliveryboiler/core/models/restaurantModel.dart';
 import 'package:fooddeliveryboiler/core/services/networking.dart';
 import 'package:fooddeliveryboiler/core/viewModels/base.dart';
@@ -12,22 +14,31 @@ class HomeModel extends BaseModel {
   get homeDataJson => _homeDataJson;
 
   set homeDataJson(data) => _homeDataJson = data;
+  startTime() async {
+    var _duration = new Duration(seconds: 5);
+    incrCounter();
+    return new Timer(_duration, getRestaurantData);
+  }
 
   dynamic getRestaurantData() async {
     setViewState(ViewState.Busy);
+    try {
+      var response = await _network.get(
+          "/qeats/restaurants?latitude=28.50&longitude=70.50&token=wearegoingtorockit");
 
-    var response = await _network.get(
-        "/qeats/restaurants?latitude=28.50&longitude=70.50&token=wearegoingtorockit");
-
-    if (response['success']) {
-      var restaurantData = List<RestaurantData>();
-      for (var data in response['data']) {
-        restaurantData.add(RestaurantData.fromJson(data));
+      if (response['success']) {
+        var restaurantData = List<RestaurantData>();
+        for (var data in response['data']) {
+          print(data);
+          restaurantData.add(RestaurantData.fromJson(data));
+        }
+        homeDataJson = restaurantData;
       }
-      homeDataJson = restaurantData;
-    }
 
-    setViewState(ViewState.Idle);
-    return true;
+      setViewState(ViewState.Idle);
+      return true;
+    } catch (err) {
+      startTime();
+    }
   }
 }

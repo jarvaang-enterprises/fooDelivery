@@ -30,6 +30,9 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.get(process.env.API_VERSION, (req, res) => {
     res.status(200).send({wel: ['You\'ve reached the food delivery api']})
 })
+app.get('/', (req, res) => {
+    res.status(200).send({wel: ['You\'ve reached the food delivery website']})
+})
 
 // Implementation of a way to limit api access requests for all users
 // All requests below this impose on apiRequest limit

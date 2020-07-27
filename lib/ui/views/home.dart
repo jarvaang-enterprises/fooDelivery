@@ -7,6 +7,7 @@ import 'package:fooddeliveryboiler/core/viewModels/base.dart';
 import 'package:fooddeliveryboiler/core/viewModels/home.dart';
 import 'package:fooddeliveryboiler/ui/views/base.dart';
 import 'package:fooddeliveryboiler/ui/widgets/appBar.dart';
+import 'package:fooddeliveryboiler/ui/widgets/restaurantCard.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -16,14 +17,37 @@ class HomeScreen extends StatelessWidget {
         model.getRestaurantData();
       },
       builder: (context, model, child) {
-        print(model.homeDataJson);
         return Scaffold(
           appBar: appBar(context),
           backgroundColor: Colors.white,
           body: model.state == ViewState.Busy
               ? Center(
-                  child: SpinKitChasingDots(
-                    color: Color(0xfffd5f00),
+                  heightFactor: double.infinity,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SpinKitChasingDots(
+                        size: 30,
+                        duration: new Duration(milliseconds: 800),
+                        color: Color(0xfffd5f00),
+                      ),
+                      SizedBox(
+                        height: 50,
+                      ),
+                      model.counter >= 4
+                          ? Text(
+                              "Taking longer than normal to load ...",
+                              style: TextStyle(color: Colors.orange),
+                            )
+                          : Text(""),
+                      model.counter >= 6
+                          ? Text(
+                              "Please check your internet connection!",
+                              style: TextStyle(color: Colors.redAccent),
+                            )
+                          : Text("")
+                    ],
                   ),
                 )
               : SafeArea(
@@ -57,6 +81,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                       Expanded(
                         child: ListView(
+                          shrinkWrap: true,
                           padding: const EdgeInsets.all(8.0),
                           children: [
                             for (RestaurantData data in model.homeDataJson)

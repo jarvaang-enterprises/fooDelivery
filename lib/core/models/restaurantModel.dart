@@ -2,8 +2,8 @@ class RestaurantData {
   String sId;
   String name;
   String imageUrl;
-  double latitude;
-  double longitude;
+  String latitude;
+  String longitude;
   List<String> attributes;
   String opensAt;
   String closesAt;
@@ -24,12 +24,12 @@ class RestaurantData {
     sId = json['_id'];
     name = json['name'];
     imageUrl = json['imageUrl'];
-    latitude = json['latitude'];
-    longitude = json['longitude'];
+    latitude = json['latitude'].toString();
+    longitude = json['longitude'].toString();
     attributes = json['attributes'].cast<String>();
     opensAt = json['opensAt'];
     closesAt = json['closesAt'];
-    acceptingOrders = json['accepting_orders'];
+    acceptingOrders = json['accepting_orders'] == null ? true : false;
   }
 
   Map<String, dynamic> toJson() {

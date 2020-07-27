@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 
 /// Widget that builds our application specific appBar
+///
+/// It is a custom built widget that enables us to control the appBar separate
+///  from all the views
+///
+/// @Junior Lawrence Kibirige - aanga26@gmail.com
 Widget appBar(BuildContext context, {bool backAvailable = false}) {
   return AppBar(
     bottomOpacity: 0,
     elevation: 0,
-    backgroundColor: Colors.transparent,
+    backgroundColor: Colors.deepOrangeAccent,
     leading: IconButton(
         iconSize: 25,
         icon:
@@ -15,12 +20,21 @@ Widget appBar(BuildContext context, {bool backAvailable = false}) {
             },
         color: Colors.black),
     title: Container(
-      alignment: Alignment.center,
-      height: 28,
-      child: Image(
-        image: AssetImage("assets/images/logo.png"),
-      ),
-    ),
+        alignment: Alignment.center,
+        height: 28,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image(
+              image: AssetImage("assets/icons/delivery_logo_trans@100x61.png"),
+            ),
+            Text(
+              "Mars Cafe",
+              style: TextStyle(color: Colors.black54),
+            )
+          ],
+        )),
     actions: [
       Padding(
         padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
