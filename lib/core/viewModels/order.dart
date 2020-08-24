@@ -5,6 +5,7 @@ import 'package:fooddeliveryboiler/core/viewModels/base.dart';
 
 class OrderModel extends BaseModel {
   Network _network = locator<Network>();
+  String modelName = "order_confirm";
 
   OrderData _orderData = OrderData();
 
@@ -17,7 +18,7 @@ class OrderModel extends BaseModel {
 
   dynamic getOrderData(orderId) async {
     setViewState(ViewState.Busy);
-
+    print(orderId);
     var response =
         await _network.get("/qeats/order/$orderId?token=wearegoingtorockit");
 
@@ -36,13 +37,12 @@ class OrderModel extends BaseModel {
 
   dynamic refreshOrderData(orderId) async {
     print("refreshing");
-    var response =
-        await _network.get("/qeats/order/$orderId?token=wearegoingtorockit");
+    var response = await _network
+        .get("/qeats/order/$orderId?token=wearegoingtorockit", apiKey: '');
 
     if (response['success']) {
       print(response);
       var order = OrderData.fromJson(response['data']);
-
       orderData = order;
     }
 

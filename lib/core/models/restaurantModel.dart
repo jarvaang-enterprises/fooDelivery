@@ -21,7 +21,7 @@ class RestaurantData {
       this.acceptingOrders});
 
   RestaurantData.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
+    sId = json['restaurantId'];
     name = json['name'];
     imageUrl = json['imageUrl'];
     latitude = json['latitude'].toString();
@@ -29,12 +29,13 @@ class RestaurantData {
     attributes = json['attributes'].cast<String>();
     opensAt = json['opensAt'];
     closesAt = json['closesAt'];
-    acceptingOrders = json['accepting_orders'] == null ? true : false;
+    acceptingOrders =
+        json['accepting_orders'] == null ? true : json['accepting_orders'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
+    data['restaurantId'] = this.sId;
     data['name'] = this.name;
     data['imageUrl'] = this.imageUrl;
     data['latitude'] = this.latitude;

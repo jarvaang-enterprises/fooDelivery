@@ -7,7 +7,7 @@ class OrderData {
   int totalItems;
   String orderedOnRaw;
   String orderedOn;
-  int preprationTime;
+  int preparationTime;
   String status;
 
   OrderData(
@@ -19,7 +19,7 @@ class OrderData {
       this.totalItems,
       this.orderedOnRaw,
       this.orderedOn,
-      this.preprationTime,
+      this.preparationTime,
       this.status});
 
   OrderData.fromJson(Map<String, dynamic> json) {
@@ -36,7 +36,8 @@ class OrderData {
     totalItems = json['total_items'];
     orderedOnRaw = json['ordered_on_raw'];
     orderedOn = json['ordered_on'];
-    preprationTime = json['prepration_time'];
+    preparationTime =
+        json['preparation_time'] == null ? 0 : json['preparation_time'];
     status = json['status'];
   }
 
@@ -52,7 +53,7 @@ class OrderData {
     data['total_items'] = this.totalItems;
     data['ordered_on_raw'] = this.orderedOnRaw;
     data['ordered_on'] = this.orderedOn;
-    data['prepration_time'] = this.preprationTime;
+    data['preparation_time'] = this.preparationTime;
     data['status'] = this.status;
     return data;
   }

@@ -9,6 +9,7 @@ class MenuData {
   int preprationTime;
   List<String> attributes;
   int totalItems;
+  int inInventory;
 
   MenuData(
       {this.sId,
@@ -20,7 +21,8 @@ class MenuData {
       this.isAvailable,
       this.preprationTime,
       this.attributes,
-      this.totalItems});
+      this.totalItems,
+      this.inInventory});
 
   MenuData.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -33,6 +35,7 @@ class MenuData {
     preprationTime = json['prepration_time'];
     attributes = json['attributes'].cast<String>();
     totalItems = json['total_items'] ?? 0;
+    inInventory = json['in_inventory'];
   }
 
   Map<String, dynamic> toJson() {
@@ -47,6 +50,7 @@ class MenuData {
     data['prepration_time'] = this.preprationTime;
     data['attributes'] = this.attributes;
     data['total_items'] = this.totalItems;
+    data['in_inventory'] = this.inInventory;
     return data;
   }
 }

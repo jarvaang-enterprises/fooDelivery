@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "836119186875",
+    "firebase_url": "https://foodelivery-cc1b6.firebaseio.com",
+    "project_id": "foodelivery-cc1b6",
+    "storage_bucket": "foodelivery-cc1b6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:836119186875:android:48c0471abad63a6fe6889e",
+        "android_client_info": {
+          "package_name": "lan.tmsystem.fooddeliveryboiler"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "836119186875-9su6g6aa48rb3ait8tqf9gna0l1uu1f6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0upN3A3S-S19K5WSR-Iu2vUZXXgyUDZo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "836119186875-9su6g6aa48rb3ait8tqf9gna0l1uu1f6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -10,7 +10,7 @@ import 'package:fooddeliveryboiler/ui/views/home.dart';
 import 'package:fooddeliveryboiler/ui/widgets/appBar.dart';
 
 class OrderConfirm extends StatefulWidget {
-  var orderId;
+  final orderId;
   OrderConfirm({this.orderId});
 
   @override
@@ -56,7 +56,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
       },
       builder: (context, model, child) {
         return Scaffold(
-          appBar: appBar(context, backAvailable: true),
+          appBar: appBar(context, backAvailable: true, model: model),
           backgroundColor: Colors.white,
           body: SafeArea(
             child: model.state == ViewState.Busy
@@ -360,7 +360,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
                 width: 5,
               ),
               Text(
-                model.orderData.preprationTime.toString() + "min.",
+                model.orderData.preparationTime.toString() + "min.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.black.withOpacity(0.4),
@@ -549,7 +549,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
                 width: 5,
               ),
               Text(
-                model.orderData.preprationTime.toString() + "min.",
+                model.orderData.preparationTime.toString() + "min.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.black.withOpacity(0.4),
@@ -734,7 +734,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
                 width: 5,
               ),
               Text(
-                model.orderData.preprationTime.toString() + "min.",
+                model.orderData.preparationTime.toString() + "min.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.black.withOpacity(0.4),
@@ -1289,7 +1289,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
                 width: 5,
               ),
               Text(
-                model.orderData.preprationTime.toString() + "min.",
+                model.orderData.preparationTime.toString() + "min.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.black.withOpacity(0.4),

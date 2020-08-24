@@ -1,24 +1,41 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fooddeliveryboiler/core/models/restaurantModel.dart';
 import 'package:fooddeliveryboiler/core/viewModels/base.dart';
 import 'package:fooddeliveryboiler/core/viewModels/home.dart';
 import 'package:fooddeliveryboiler/ui/views/base.dart';
 import 'package:fooddeliveryboiler/ui/widgets/appBar.dart';
+import 'package:fooddeliveryboiler/ui/widgets/drawer.dart';
 import 'package:fooddeliveryboiler/ui/widgets/restaurantCard.dart';
 
 class HomeScreen extends StatelessWidget {
+  static const String routeName = '/';
+  final GlobalKey<ScaffoldState> _scafflodKey = new GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
+    TextEditingController search = new TextEditingController();
+
     return BaseView<HomeModel>(
       onModelReady: (model) {
         model.getRestaurantData();
+        model.getCurrentUser();
       },
       builder: (context, model, child) {
+        if (!model.isSearch) {
+          search.clear();
+        } else {
+          if (model.searchDataJson == null) {
+            var snackbar = SnackBar(content: Text('Search return empty'));
+            Scaffold.of(context).showSnackBar(snackbar);
+          }
+        }
         return Scaffold(
-          appBar: appBar(context),
+          key: _scafflodKey,
+          appBar: appBar(context, model: model, key: _scafflodKey),
+          drawer: AppDrawer(model: model),
+          drawerEnableOpenDragGesture: true,
           backgroundColor: Colors.white,
           body: model.state == ViewState.Busy
               ? Center(
@@ -57,9 +74,28 @@ class HomeScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(20.0),
                         child: TextField(
                           style: TextStyle(fontSize: 18),
+                          onSubmitted: (String searchValue) {
+                            if (searchValue != '') {
+                              model.isSearch = true;
+                              model.searchData(searchValue);
+                            }
+                          },
+                          controller: search,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.fromLTRB(15, 17, 15, 15),
-                            prefixIcon: Icon(Icons.search),
+                            suffixIcon: GestureDetector(
+                              child: Icon(!model.isSearch
+                                  ? FontAwesomeIcons.search
+                                  : Icons.cancel),
+                              onTap: () => {
+                                !model.isSearch
+                                    ? {
+                                        model.isSearch = true,
+                                        model.searchData(search.text)
+                                      }
+                                    : {model.isSearch = false, model.refresh()}
+                              },
+                            ),
                             hintText: "Search for Restaurants, Cuisine",
                             hintStyle: TextStyle(fontSize: 18),
                             focusedBorder: OutlineInputBorder(
@@ -84,7 +120,9 @@ class HomeScreen extends StatelessWidget {
                           shrinkWrap: true,
                           padding: const EdgeInsets.all(8.0),
                           children: [
-                            for (RestaurantData data in model.homeDataJson)
+                            for (RestaurantData data in !model.isSearch
+                                ? model.homeDataJson
+                                : model.searchDataJson)
                               restaurantCard(context, data),
                           ],
                         ),

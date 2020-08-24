@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fooddeliveryboiler/core/viewModels/base.dart';
 import 'package:fooddeliveryboiler/locator.dart';

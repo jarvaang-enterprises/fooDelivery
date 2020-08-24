@@ -12,23 +12,39 @@ class Network {
   final JsonDecoder _decoder = new JsonDecoder();
 
   // ignore: non_constant_identifier_names
-  static final BASE_URL = "http://192.168.43.9:5500";
+  // static final BASE_URL = "http://192.168.56.1:5500";
+  static final BASE_URL = "http://10.0.2.2:5500";
   // ignore: non_constant_identifier_names
-  static final API_VERSION = "/api/v1";
+  static final API_VERSION = '/api/v1';
 
-  Future<dynamic> get(String url) {
+  Future<dynamic> get(String url, {String bearer = '', String apiKey = ''}) {
     String completeUrl = BASE_URL + API_VERSION + url;
-    print(completeUrl);
+    if (bearer != '') {
+      return http.get(completeUrl, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'x-api-key': apiKey,
+        'Authorization': 'Bearer $bearer',
+      }).then((http.Response response) {
+        final String res = response.body;
+        final int statusCode = response.statusCode;
 
-    return http.get(completeUrl).then((http.Response response) {
-      final String res = response.body;
-      final int statusCode = response.statusCode;
+        // if (statusCode < 200 || statusCode > 400 || json == null) {
+        //   throw new Exception("Error while fetching data");
+        // }
+        return _decoder.convert(res);
+      });
+    } else {
+      return http.get(completeUrl).then((http.Response response) {
+        final String res = response.body;
+        final int statusCode = response.statusCode;
 
-      // if (statusCode < 200 || statusCode > 400 || json == null) {
-      //   throw new Exception("Error while fetching data");
-      // }
-      return _decoder.convert(res);
-    });
+        // if (statusCode < 200 || statusCode > 400 || json == null) {
+        //   throw new Exception("Error while fetching data");
+        // }
+        return _decoder.convert(res);
+      });
+    }
   }
 
   Future<dynamic> post(String url, {Map headers, body, encoding}) {

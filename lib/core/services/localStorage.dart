@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:fooddeliveryboiler/core/models/userModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorage {
@@ -18,29 +21,39 @@ class LocalStorage {
     return _instance;
   }
 
-//   static const String UserKey = 'user';
+  static const String UserKey = 'user';
 
-//   User get user {
-//   var userJson = _getFromDisk(UserKey);
-//   if (userJson == null) {
-//     return null;
-//   }
+  UserData get user {
+    var userJson = _getFromDisk(UserKey);
+    if (userJson == null) {
+      return null;
+    }
+    return UserData.fromJson(json.decode(userJson));
+  }
 
-//   return User.fromJson(json.decode(userJson));
-// }
+  set user(UserData userToSave) {
+    saveStringToDisk(UserKey, json.encode(userToSave.toJson()));
+  }
 
-// set user(User userToSave) {
-//     saveStringToDisk(UserKey, json.encode(userToSave.toJson()));
-// }
+  dynamic _getFromDisk(String key) {
+    var value = _preferences.get(key);
+    print('(TRACE) LocalStorageService:_getFromDisk. key: $key value: $value');
+    return value;
+  }
 
-// dynamic _getFromDisk(String key) {
-//   var value  = _preferences.get(key);
-//   print('(TRACE) LocalStorageService:_getFromDisk. key: $key value: $value');
-//   return value;
-// }
+  bool getFromDisk(String key) {
+    return _getFromDisk(key);
+  }
 
-// void saveStringToDisk(String key, String content){
-//   print('(TRACE) LocalStorageService:_saveStringToDisk. key: $key value: $content');
-//   _preferences.setString(UserKey, content);
-// }
+  void saveGetStartedToDisk(String key, bool content) {
+    print(
+        '(TRACE) LocalStorageService: _saveGetStartedToDisk. key: $key value: $content');
+    _preferences.setBool(key, content);
+  }
+
+  void saveStringToDisk(String key, String content) {
+    print(
+        '(TRACE) LocalStorageService:_saveStringToDisk. key: $key value: $content');
+    _preferences.setString(UserKey, content);
+  }
 }
