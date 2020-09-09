@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fooddeliveryboiler/core/models/userModel.dart';
 import 'package:fooddeliveryboiler/core/services/localStorage.dart';
@@ -20,14 +19,13 @@ class LoginPage extends StatelessWidget {
   final Color primaryColor = Color(0xff18203d);
   final Color secondaryColor = Color(0xff232c51);
 
-  final Color logoGreen = Color(0xff25bcbb);
+  final Color logoGreen = Color(0xff2f9f1b);
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   GlobalKey<ScaffoldState> _key = new GlobalKey<ScaffoldState>();
   Network _network = locator<Network>();
-  LocalStorage _storage = locator<LocalStorage>();
 
   @override
   Widget build(BuildContext context) {
@@ -129,9 +127,9 @@ class LoginPage extends StatelessWidget {
                               onPressed: () {
                                 var userN = nameController.text.trim();
                                 var passW = passwordController.text.trim();
-                                print("Username: " + userN);
-                                print("Password: " + passW);
                                 if (userN == '' || passW == '') {
+                                  model.errorMessage =
+                                      "Fill in the login details";
                                 } else
                                   model.loginUsingEmail(userN, passW);
                               },
@@ -140,6 +138,38 @@ class LoginPage extends StatelessWidget {
                                 'Login',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 16),
+                              ),
+                              textColor: Colors.white,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            MaterialButton(
+                              elevation: 0,
+                              minWidth: double.maxFinite,
+                              height: 50,
+                              onPressed: () {
+                                // model.signInWithGoogle();
+                                _key.currentState.showSnackBar(SnackBar(
+                                    content: Text(
+                                        "Sign Up Screen not implemented")));
+                              },
+                              color: Colors.orangeAccent.shade700,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  // Icon(FontAwesomeIcons.google),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    'Sign Up',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
                               ),
                               textColor: Colors.white,
                             ),
@@ -173,7 +203,7 @@ class LoginPage extends StatelessWidget {
                               textColor: Colors.white,
                             ),
                             SizedBox(
-                              height: 100,
+                              height: 60,
                             ),
                             Align(
                               alignment: Alignment.bottomCenter,
@@ -218,13 +248,8 @@ class LoginPage extends StatelessWidget {
                       )
                     : null);
           } else {
-            model.signOut();
             if (model.currentUser != null) {
               _localLogin(model, context: context);
-            } else {
-              print('Local Login Effected');
-              // Route route = MaterialPageRoute(builder: (context) => HomeScreen());
-              // Navigator.pushReplacement(context, route);
             }
           }
           return Container();
@@ -265,8 +290,9 @@ class LoginPage extends StatelessWidget {
           if (model.currentUser != null) {
             _localLogin(model, context: context);
           } else {
-            print('Local Login Effected');
-            redirectUser(context);
+            if (model.localUser != null) {
+              redirectUser(context);
+            }
             return Scaffold(
                 key: _key,
                 appBar: AppBar(
@@ -327,13 +353,11 @@ class LoginPage extends StatelessWidget {
           };
 
           UserData userData = new UserData.fromJson(loginData);
-          _storage.user = userData;
+          model.storage.user = userData;
           Route route = MaterialPageRoute(builder: (context) => HomeScreen());
           Navigator.pushReplacement(context, route);
         }
       }
-    } else {
-      UserData userData = model.localUser;
     }
   }
 
@@ -402,7 +426,7 @@ class LoginPage extends StatelessWidget {
       fN = user.displayName.trim().split(' ')[0] +
           ' ' +
           user.displayName.trim().split(' ')[1];
-      lN = user.displayName.trim().split(' ')[2];
+      lN = user.displayName.trim().split(' ').sublist(2).join(' ');
     } else {
       fN = user.displayName.trim().split(' ')[0];
       lN = user.displayName.trim().split(' ')[1];
@@ -439,7 +463,7 @@ class LoginPage extends StatelessWidget {
           };
 
           UserData userData = new UserData.fromJson(loginData);
-          _storage.user = userData;
+          model.storage.user = userData;
           Route route = MaterialPageRoute(builder: (context) => HomeScreen());
           Navigator.pushReplacement(context, route);
         }

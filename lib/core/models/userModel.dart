@@ -17,7 +17,6 @@ class UserData {
       this.apiKey});
 
   UserData.fromJson(Map<String, dynamic> json) {
-    print(json);
     uID = json['accessId'];
     displayName = json['displayName'];
     email = json['email'];

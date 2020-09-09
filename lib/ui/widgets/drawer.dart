@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:fooddeliveryboiler/core/viewModels/home.dart';
 import 'package:fooddeliveryboiler/ui/views/home.dart';
 import 'package:fooddeliveryboiler/ui/views/login.dart';
+import 'package:fooddeliveryboiler/ui/views/orderScreen.dart';
 
 class AppDrawer extends StatelessWidget {
-  AppDrawer({this.model});
+  AppDrawer({this.model, this.name});
   final model;
+  final name;
 
   @override
   Widget build(BuildContext context) {
@@ -17,24 +18,32 @@ class AppDrawer extends StatelessWidget {
           _createHeader(context, model),
           _createDrawerItem(context, icon: Icons.contacts, text: 'Home',
               onTap: () {
-            Navigator.pop(context);
-            Route route = MaterialPageRoute(builder: (context) => HomeScreen());
-            Navigator.pushReplacement(context, route);
+            if (model.storage.getCurrentScreen() != "homeModal") {
+              Navigator.pop(context);
+              Route route =
+                  MaterialPageRoute(builder: (context) => HomeScreen());
+              Navigator.pushReplacement(context, route);
+            } else {
+              Navigator.pop(context);
+            }
           }),
           _createDrawerItem(context, icon: Icons.event, text: 'Orders',
               onTap: () {
-            Navigator.pop(context);
-            Fluttertoast.showToast(
-                msg: "Orders page",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                backgroundColor: Theme.of(context).primaryColorDark,
-                timeInSecForIos: 2);
-            // Route route = MaterialPageRoute(builder: (context) => HomeScreen());
-            // Navigator.pushReplacement(context, route);
+            if (model.storage.getCurrentScreen() != "orderScreen") {
+              // model.storage.saveCurrentScreen("orderScreen");
+              Navigator.pop(context);
+              Route route =
+                  MaterialPageRoute(builder: (context) => OrdersView());
+              Navigator.push(context, route);
+            } else {
+              Navigator.pop(context);
+            }
           }),
-          _createDrawerItem(context, icon: Icons.note, text: 'Notes',
-              onTap: () {
+          _createDrawerItem(context,
+              icon: Icons.account_circle, text: 'Profile', onTap: () {
+            Fluttertoast.showToast(
+                msg: "Profile page coming in future releases!",
+                toastLength: Toast.LENGTH_LONG);
             Navigator.pop(context);
             // Route route = MaterialPageRoute(builder: (context) => HomeScreen());
             // Navigator.pushReplacement(context, route);
@@ -60,6 +69,7 @@ class AppDrawer extends StatelessWidget {
                     Navigator.pop(context),
                     if (model != null)
                       {
+                        model.storage.saveStringToDisk('user', null),
                         model.signOut(),
                         Navigator.pushReplacement(
                             context,
@@ -81,7 +91,7 @@ class AppDrawer extends StatelessWidget {
     );
   }
 
-  Widget _createHeader(BuildContext context, HomeModel model) {
+  Widget _createHeader(BuildContext context, dynamic model) {
     return UserAccountsDrawerHeader(
       accountName: Text(model.user.displayName),
       accountEmail: Text(model.user.email),
@@ -90,12 +100,15 @@ class AppDrawer extends StatelessWidget {
             ? Colors.blue
             : Colors.white,
         child: model.user.photoUrl == null
-            ? Text(
-                model.user.displayName
-                    .split(' ')[0]
-                    .substring(0, 1)
-                    .toUpperCase(),
-                style: TextStyle(fontSize: 40.0),
+            ? Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Text(
+                  model.user.displayName
+                      .split(' ')[0]
+                      .substring(0, 1)
+                      .toUpperCase(),
+                  style: TextStyle(fontSize: 40.0),
+                ),
               )
             : NetworkImage(model.user.photoUrl, scale: 1.0),
       ),

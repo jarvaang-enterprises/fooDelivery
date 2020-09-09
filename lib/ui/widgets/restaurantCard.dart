@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:fooddeliveryboiler/core/models/restaurantModel.dart';
+import 'package:fooddeliveryboiler/core/viewModels/home.dart';
 import 'package:fooddeliveryboiler/ui/views/menu.dart';
 
 final _random = new Random();
@@ -9,7 +10,7 @@ final _random = new Random();
 int next(int min, int max) => min + _random.nextInt(max - min);
 
 // Responsible for displaying the individual Dish Cards to the user
-Widget restaurantCard(context, RestaurantData data) {
+Widget restaurantCard(context, RestaurantData data, HomeModel model) {
   return GestureDetector(
     onTap: () {
       if (data.acceptingOrders) {

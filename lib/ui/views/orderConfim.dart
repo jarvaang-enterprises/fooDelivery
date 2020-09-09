@@ -18,11 +18,14 @@ class OrderConfirm extends StatefulWidget {
 }
 
 class _OrderConfirmState extends State<OrderConfirm> {
-  Timer timer, timer_once;
+  Timer timer;
   bool cancelButton = false;
+  OrderModel modelKey;
+  GlobalKey<ScaffoldState> _key = new GlobalKey<ScaffoldState>();
 
   @override
   void dispose() {
+    timer?.cancel();
     timer?.cancel();
     super.dispose();
   }
@@ -33,12 +36,19 @@ class _OrderConfirmState extends State<OrderConfirm> {
     });
   }
 
-  cancelOrder(model) async {
+  cancelOrder(OrderModel model) async {
     setState(() {
       cancelButton = true;
     });
 
     var response = await model.cancelOrder(widget.orderId);
+
+    if (response) {
+    } else {
+      var snackbar = SnackBar(
+          content: Text("An error occured, Sorry for the inconvinience!"));
+      _key.currentState.showSnackBar(snackbar);
+    }
 
     setState(() {
       cancelButton = false;
@@ -49,13 +59,16 @@ class _OrderConfirmState extends State<OrderConfirm> {
   Widget build(BuildContext context) {
     return BaseView<OrderModel>(
       onModelReady: (model) {
+        model.getCurrentUser();
         model.getOrderData(widget.orderId);
+        modelKey = model;
         Future.delayed(const Duration(milliseconds: 2000), () {
           refreshOrderData(model);
         });
       },
       builder: (context, model, child) {
         return Scaffold(
+          key: _key,
           appBar: appBar(context, backAvailable: true, model: model),
           backgroundColor: Colors.white,
           body: SafeArea(
@@ -279,7 +292,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
 
           Center(
             child: Text(
-              "Jun 18, 2019 at 3:47 PM",
+              model.orderData.orderedOn,
               style: TextStyle(
                   color: Colors.black.withOpacity(0.6),
                   fontSize: 18,

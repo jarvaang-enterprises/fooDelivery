@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "836119186875-ocumn8mrv5qc0aubq2k0n827rnojpojv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "lan.tmsystem.fooddeliveryboiler",
+            "certificate_hash": "8fde3aa65213e8ae355355681b5a0ae0b64b42d9"
+          }
+        },
+        {
           "client_id": "836119186875-9su6g6aa48rb3ait8tqf9gna0l1uu1f6.apps.googleusercontent.com",
           "client_type": 3
         }

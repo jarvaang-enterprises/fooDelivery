@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:fooddeliveryboiler/core/models/deliveryModel.dart';
 import 'package:fooddeliveryboiler/core/models/restaurantModel.dart';
 import 'package:fooddeliveryboiler/core/models/userModel.dart';
 import 'package:fooddeliveryboiler/core/services/localStorage.dart';
@@ -11,16 +12,29 @@ import '../../locator.dart';
 
 class HomeModel extends BaseModel {
   Network _network = locator<Network>();
+  String modelName = "homeModal";
   LocalStorage _storage = locator<LocalStorage>();
   LoginModel _loginModel = locator<LoginModel>();
 
   UserData _user;
+  DeliveryData _deliveryData;
+
+  DeliveryData get deliveryData => _deliveryData;
+
+  set deliveryData(DeliveryData deliveryData) {
+    _deliveryData = deliveryData;
+  }
 
   UserData get user => _user;
 
   void getCurrentUser() {
+    setModelName(this.modelName);
+    setStorage(_storage);
     _user = _storage.user;
+    deliveryData = _storage.delivery;
   }
+
+  LocalStorage get storage => _storage;
 
   List<RestaurantData> _homeDataJson;
   List<RestaurantData> _searchDataJson;

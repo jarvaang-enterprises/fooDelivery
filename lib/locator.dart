@@ -1,6 +1,8 @@
+import 'package:fooddeliveryboiler/core/models/deliveryModel.dart';
 import 'package:fooddeliveryboiler/core/services/localStorage.dart';
 import 'package:fooddeliveryboiler/core/viewModels/home.dart';
 import 'package:fooddeliveryboiler/core/viewModels/order.dart';
+import 'package:fooddeliveryboiler/core/viewModels/orderScreen.dart';
 import 'package:get_it/get_it.dart';
 
 import 'core/services/networking.dart';
@@ -22,4 +24,8 @@ Future setupLocator() async {
   locator.registerFactory(() => MenuModel());
 
   locator.registerFactory(() => OrderModel());
+
+  locator.registerFactory(() => OrderScreen());
+
+  locator.registerFactory(() => DeliveryData());
 }

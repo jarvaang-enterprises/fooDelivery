@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fooddeliveryboiler/core/models/menuModel.dart';
-import 'package:fooddeliveryboiler/core/viewModels/base.dart';
 import 'package:fooddeliveryboiler/core/viewModels/menu.dart';
 import 'package:provider/provider.dart';
 

@@ -8,6 +8,7 @@ import 'package:fooddeliveryboiler/core/viewModels/menu.dart';
 import 'package:fooddeliveryboiler/ui/views/base.dart';
 import 'package:fooddeliveryboiler/ui/views/orderConfim.dart';
 import 'package:fooddeliveryboiler/ui/widgets/appBar.dart';
+import 'package:fooddeliveryboiler/ui/widgets/drawer.dart';
 import 'package:fooddeliveryboiler/ui/widgets/menuItem.dart';
 
 class Menu extends StatefulWidget {
@@ -20,42 +21,37 @@ class Menu extends StatefulWidget {
 
 class _MenuState extends State<Menu> {
   bool orderNowButton = false;
+  TextEditingController search = new TextEditingController();
+  GlobalKey<ScaffoldState> _key = new GlobalKey<ScaffoldState>();
 
-  /**
-   * Responsible for handling new order details
-   */
-  dynamic sendNewOrder(model, context) async {
+  /// Responsible for handling new order details
+  dynamic sendNewOrder(MenuModel model, context) async {
     setState(() {
       orderNowButton = true;
     });
 
     Map<String, MenuData> _cart = model.getCart();
 
-    String jsonStr = """{
-      "userId":"dummy",
-      "restaurantId":"${widget.restaurantId}",
-      "items": []
-    }""";
+    String jsonStr =
+        """{"userId": "${model.user.uID}","restaurantId":"${widget.restaurantId}","items": []}""";
 
     var result = json.decode(jsonStr);
     _cart.forEach((key, value) {
-      result['items'].add({"_id": value.sId, "quantity": value.totalItems});
+      result['items'].add(value);
     });
 
     var response = await model.sendNewOrder(json.encode(result));
-    print(response);
 
     if (response['success']) {
-      print("yes");
+      _cart.clear();
       Route route = MaterialPageRoute(
           builder: (context) => OrderConfirm(orderId: response['data']['_id']));
       Navigator.push(context, route);
     } else {
-      print("no");
       final snackBar = SnackBar(
         content: Text("Could not place order. Please Try again later."),
       );
-      Scaffold.of(context).showSnackBar(snackBar);
+      _key.currentState.showSnackBar(snackBar);
     }
 
     setState(() {
@@ -69,12 +65,26 @@ class _MenuState extends State<Menu> {
   Widget build(BuildContext context) {
     return BaseView<MenuModel>(
       onModelReady: (model) {
+        model.getCurrentUser();
         model.getMenuData(widget.restaurantId);
       },
       builder: (context, model, child) {
+        if (!model.isSearch) {
+          search.clear();
+        } else {
+          if (model.searchDataJson == null) {
+            var snackbar = SnackBar(content: Text('Search return empty'));
+            Scaffold.of(context).showSnackBar(snackbar);
+          }
+        }
         return Scaffold(
-          appBar: appBar(context, backAvailable: true),
+          appBar: appBar(context, backAvailable: true, model: model),
+          key: _key,
           backgroundColor: Colors.white,
+          drawerEnableOpenDragGesture: true,
+          drawer: AppDrawer(
+            model: model,
+          ),
           body: model.state == ViewState.Busy
               ? Center(
                   child: SpinKitChasingDots(color: Color(0xfffd5f00)),
@@ -87,7 +97,14 @@ class _MenuState extends State<Menu> {
                         Padding(
                           padding: const EdgeInsets.all(20.0),
                           child: TextField(
+                            controller: search,
                             style: TextStyle(fontSize: 18),
+                            onSubmitted: (String searchValue) {
+                              if (searchValue != '') {
+                                model.isSearch = true;
+                                model.searchData(searchValue);
+                              }
+                            },
                             decoration: InputDecoration(
                               contentPadding:
                                   EdgeInsets.fromLTRB(15, 17, 15, 15),
@@ -118,7 +135,9 @@ class _MenuState extends State<Menu> {
                           child: ListView(
                               padding: const EdgeInsets.all(8.0),
                               children: [
-                                for (var data in model.menuData)
+                                for (var data in !model.isSearch
+                                    ? model.menuData
+                                    : model.searchDataJson)
                                   MenuItemCard(data: data),
                                 SizedBox(height: 80),
                               ]),

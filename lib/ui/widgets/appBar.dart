@@ -25,6 +25,10 @@ Widget appBar(BuildContext context,
             Icon(backAvailable ? Icons.arrow_back_ios : Icons.restaurant_menu),
         onPressed: () {
           if (backAvailable) {
+            String prev = model.storage.getPrevScreen();
+            // model.storage.savePrevScreen(model.storage.getCurrentScreen());
+            // String cu = model.modelName;
+            model.storage.saveCurrentScreen(prev);
             Navigator.pop(context);
           } else {
             if (model != null) {
@@ -59,21 +63,23 @@ Widget appBar(BuildContext context,
           ],
         )),
     actions: [
-      PopupMenuButton<Choice>(
-        icon: Icon(
-          Icons.filter_list,
-          color: Colors.black,
-        ),
-        onSelected: _select,
-        itemBuilder: (BuildContext context) {
-          return choices.map((Choice e) {
-            return PopupMenuItem<Choice>(
-              value: e,
-              child: Text(e.title),
-            );
-          }).toList();
-        },
-      )
+      model.storage.getCurrentScreen() != 'orderScreen'
+          ? PopupMenuButton<Choice>(
+              icon: Icon(
+                Icons.filter_list,
+                color: Colors.black,
+              ),
+              onSelected: _select,
+              itemBuilder: (BuildContext context) {
+                return choices.map((Choice e) {
+                  return PopupMenuItem<Choice>(
+                    value: e,
+                    child: Text(e.title),
+                  );
+                }).toList();
+              },
+            )
+          : Container()
     ],
   );
 }
