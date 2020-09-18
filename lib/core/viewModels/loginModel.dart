@@ -1,5 +1,3 @@
-// import 'dart:js';
-
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -171,7 +169,7 @@ class LoginModel extends BaseModel {
         newUser = false;
 
         /// Check whether user has delivery details setup
-        var delDet = await _network.get('/user/' + user.uID + '/deliveryDet',
+        var delDet = await _network.get('/user/' + user.uID + '/delDetails',
             apiKey: user.apiKey);
         if (delDet['success']) {
           delDetails = true;

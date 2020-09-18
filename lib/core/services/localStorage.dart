@@ -23,7 +23,7 @@ class LocalStorage {
   }
 
   static const String UserKey = 'user';
-  static const String DelDataKey = 'userDeliveryData';
+  static const String DelDataKey = 'DeliveryData';
 
   UserData get user {
     var userJson = _getFromDisk(UserKey);
@@ -82,6 +82,6 @@ class LocalStorage {
   }
 
   void saveStringToDisk(String key, String content) async {
-    await _preferences.setString(UserKey, content);
+    await _preferences.setString(key, content);
   }
 }
