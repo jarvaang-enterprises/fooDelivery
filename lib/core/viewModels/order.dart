@@ -53,8 +53,8 @@ class OrderModel extends BaseModel {
 
   dynamic refreshOrderData(orderId) async {
     var response = await _network.get(
-        "/qeats/order/$orderId?token=wearegoingtorockit",
-        apiKey: user.apiKey ?? "");
+        "/qeats/${user.uID}/order/$orderId?token=wearegoingtorockit",
+        apiKey: user.apiKey);
 
     if (response['success']) {
       var order = OrderData.fromJson(response['data']);

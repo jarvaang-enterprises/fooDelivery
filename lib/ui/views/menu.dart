@@ -6,6 +6,7 @@ import 'package:fooddeliveryboiler/core/models/menuModel.dart';
 import 'package:fooddeliveryboiler/core/viewModels/base.dart';
 import 'package:fooddeliveryboiler/core/viewModels/menu.dart';
 import 'package:fooddeliveryboiler/ui/views/base.dart';
+import 'package:fooddeliveryboiler/ui/views/delivery.dart';
 import 'package:fooddeliveryboiler/ui/views/orderConfim.dart';
 import 'package:fooddeliveryboiler/ui/widgets/appBar.dart';
 import 'package:fooddeliveryboiler/ui/widgets/drawer.dart';
@@ -40,18 +41,135 @@ class _MenuState extends State<Menu> {
       result['items'].add(value);
     });
 
-    var response = await model.sendNewOrder(json.encode(result));
-
-    if (response['success']) {
-      _cart.clear();
-      Route route = MaterialPageRoute(
-          builder: (context) => OrderConfirm(orderId: response['data']['_id']));
-      Navigator.push(context, route);
-    } else {
-      final snackBar = SnackBar(
-        content: Text("Could not place order. Please Try again later."),
+    var r;
+    var delData = model.storage.delivery;
+    if (delData != null) {
+      r = await showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          // contentPadding: EdgeInsets.symmetric(horizontal: 1.0),
+          title: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Delivery Details",
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          content: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Container(
+              height: 240.0,
+              width: double.infinity,
+              child: Column(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Should we use your old delivery details for this order?",
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                  Container(
+                    width: double.infinity,
+                    height: 200.0,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Latitude on Map: ",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          delData.lat.toString(),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "Longitude on Map: ",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          delData.long.toString(),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "City: ",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "Not Yet Implemented",
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "Distance from Restaurant: ",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          delData.dist.toString(),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton.icon(
+              onPressed: () =>
+                  {Navigator.of(context, rootNavigator: true).pop(false)},
+              icon: Icon(
+                Icons.cancel_outlined,
+                color: Colors.red,
+              ),
+              label: Text(
+                "No",
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+            TextButton.icon(
+              onPressed: () =>
+                  Navigator.of(context, rootNavigator: true).pop(true),
+              icon: Icon(Icons.check),
+              label: Text("Yes"),
+            ),
+          ],
+        ),
       );
-      _key.currentState.showSnackBar(snackBar);
+    }
+    if (r != null && r == true) {
+      var response = await model.sendNewOrder(json.encode(result));
+
+      if (response['success']) {
+        _cart.clear();
+        final snackBar = SnackBar(
+          content: Text("Could not place order. Please Try again later."),
+        );
+        _key.currentState.showSnackBar(snackBar);
+        Route route = MaterialPageRoute(
+            builder: (context) =>
+                OrderConfirm(orderId: response['data']['_id']));
+        Navigator.push(context, route);
+      } else {
+        final snackBar = SnackBar(
+          content: Text("Could not place order. Please Try again later."),
+        );
+        _key.currentState.showSnackBar(snackBar);
+      }
+    } else {
+      Route route = MaterialPageRoute(builder: (context) => DeliveryScreen());
+      var d = await Navigator.push(context, route);
+      print(d);
     }
 
     setState(() {
