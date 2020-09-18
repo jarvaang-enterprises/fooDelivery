@@ -8,6 +8,7 @@ import 'package:fooddeliveryboiler/core/models/restaurantModel.dart';
 import 'package:fooddeliveryboiler/core/viewModels/base.dart';
 import 'package:fooddeliveryboiler/core/viewModels/home.dart';
 import 'package:fooddeliveryboiler/ui/views/base.dart';
+import 'package:fooddeliveryboiler/ui/views/delivery.dart';
 import 'package:fooddeliveryboiler/ui/views/login.dart';
 import 'package:fooddeliveryboiler/ui/widgets/appBar.dart';
 import 'package:fooddeliveryboiler/ui/widgets/drawer.dart';
@@ -32,6 +33,14 @@ class HomeScreen extends StatelessWidget {
       return new Timer(_duration, navigationPage);
     }
 
+    redirectUser(context) {
+      var _duration = new Duration(seconds: 3);
+      return new Timer(
+          _duration,
+          () => Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => DeliveryScreen())));
+    }
+
     return BaseView<HomeModel>(
       onModelReady: (model) {
         model.getCurrentUser();
@@ -50,6 +59,7 @@ class HomeScreen extends StatelessWidget {
           if (model.deliveryData == null) {
             Fluttertoast.showToast(
                 msg: "No delivery data!", toastLength: Toast.LENGTH_LONG);
+            // redirectUser(context);
           }
           return Scaffold(
             key: _scafflodKey,

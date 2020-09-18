@@ -31,7 +31,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
   }
 
   refreshOrderData(model) {
-    timer = Timer.periodic(Duration(seconds: 5), (Timer timer) {
+    timer = Timer.periodic(Duration(seconds: 5), (timer) {
       model.refreshOrderData(widget.orderId);
     });
   }
@@ -46,7 +46,10 @@ class _OrderConfirmState extends State<OrderConfirm> {
     if (response) {
     } else {
       var snackbar = SnackBar(
-          content: Text("An error occured, Sorry for the inconvinience!"));
+        content: Text(
+          "An error occured, Sorry for the inconvinience!",
+        ),
+      );
       _key.currentState.showSnackBar(snackbar);
     }
 
@@ -221,7 +224,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
           ],
         ),
         Spacer(
-          flex: 8,
+          flex: 6,
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
@@ -268,6 +271,9 @@ class _OrderConfirmState extends State<OrderConfirm> {
               ),
             ),
           ),
+        ),
+        Spacer(
+          flex: 3,
         )
       ],
     );
@@ -484,10 +490,6 @@ class _OrderConfirmState extends State<OrderConfirm> {
             ),
           ),
 
-          // SizedBox(
-          //   height: 80,
-          // ),
-
           Spacer(
             flex: 8,
           ),
@@ -501,10 +503,6 @@ class _OrderConfirmState extends State<OrderConfirm> {
               // image: AssetImage("assets/images/food-img-1.jpg"),
             ),
           ),
-
-          // SizedBox(
-          //   height: 80,
-          // ),
 
           Spacer(
             flex: 8,
@@ -542,10 +540,6 @@ class _OrderConfirmState extends State<OrderConfirm> {
             height: 5,
           ),
 
-          // SizedBox(
-          //   height: 30,
-          // ),
-
           Spacer(
             flex: 3,
           ),
@@ -571,10 +565,6 @@ class _OrderConfirmState extends State<OrderConfirm> {
               ),
             ],
           ),
-
-          // SizedBox(
-          //   height: 120,
-          // ),
 
           Spacer(
             flex: 12,
@@ -640,14 +630,9 @@ class _OrderConfirmState extends State<OrderConfirm> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          // SizedBox(
-          //   height: 50,
-          // ),
-
           Spacer(
             flex: 5,
           ),
-
           Center(
             child: Text(
               "Order Status",
@@ -658,7 +643,6 @@ class _OrderConfirmState extends State<OrderConfirm> {
                   fontWeight: FontWeight.w800),
             ),
           ),
-
           Center(
             child: Text(
               model.orderData.orderedOn,
@@ -668,15 +652,9 @@ class _OrderConfirmState extends State<OrderConfirm> {
                   fontWeight: FontWeight.w700),
             ),
           ),
-
-          // SizedBox(
-          //   height: 80,
-          // ),
-
           Spacer(
             flex: 8,
           ),
-
           Center(
             child: Image(
               width: 150,
@@ -686,15 +664,9 @@ class _OrderConfirmState extends State<OrderConfirm> {
               // image: AssetImage("assets/images/food-img-1.jpg"),
             ),
           ),
-
-          // SizedBox(
-          //   height: 80,
-          // ),
-
           Spacer(
             flex: 8,
           ),
-
           Center(
             child: Text(
               "Preparing your Order",
@@ -704,11 +676,9 @@ class _OrderConfirmState extends State<OrderConfirm> {
                   fontWeight: FontWeight.w800),
             ),
           ),
-
           SizedBox(
             height: 5,
           ),
-
           Center(
             child: Container(
               width: 250,
@@ -722,19 +692,12 @@ class _OrderConfirmState extends State<OrderConfirm> {
               ),
             ),
           ),
-
           SizedBox(
             height: 5,
           ),
-
-          // SizedBox(
-          //   height: 30,
-          // ),
-
           Spacer(
             flex: 3,
           ),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -756,15 +719,9 @@ class _OrderConfirmState extends State<OrderConfirm> {
               ),
             ],
           ),
-
-          // SizedBox(
-          //   height: 120,
-          // ),
-
           Spacer(
             flex: 9,
           ),
-
           Padding(
             padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
             child: Material(
@@ -812,11 +769,9 @@ class _OrderConfirmState extends State<OrderConfirm> {
               ),
             ),
           ),
-
           Spacer(
             flex: 3,
           ),
-
           Padding(
             padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
             child: Material(
@@ -863,7 +818,6 @@ class _OrderConfirmState extends State<OrderConfirm> {
               ),
             ),
           ),
-
           Spacer(
             flex: 5,
           ),
@@ -906,10 +860,6 @@ class _OrderConfirmState extends State<OrderConfirm> {
             ),
           ),
 
-          // SizedBox(
-          //   height: 80,
-          // ),
-
           Spacer(
             flex: 8,
           ),
@@ -923,10 +873,6 @@ class _OrderConfirmState extends State<OrderConfirm> {
               // image: AssetImage("assets/images/food-img-1.jpg"),
             ),
           ),
-
-          // SizedBox(
-          //   height: 80,
-          // ),
 
           Spacer(
             flex: 8,
@@ -960,16 +906,8 @@ class _OrderConfirmState extends State<OrderConfirm> {
             ),
           ),
 
-          SizedBox(
-            height: 5,
-          ),
-
           Spacer(
-            flex: 3,
-          ),
-
-          Spacer(
-            flex: 12,
+            flex: 20,
           ),
 
           Padding(
@@ -1032,14 +970,9 @@ class _OrderConfirmState extends State<OrderConfirm> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          // SizedBox(
-          //   height: 50,
-          // ),
-
           Spacer(
             flex: 5,
           ),
-
           Center(
             child: Text(
               "Order Status",
@@ -1050,7 +983,6 @@ class _OrderConfirmState extends State<OrderConfirm> {
                   fontWeight: FontWeight.w800),
             ),
           ),
-
           Center(
             child: Text(
               model.orderData.orderedOn,
@@ -1060,33 +992,20 @@ class _OrderConfirmState extends State<OrderConfirm> {
                   fontWeight: FontWeight.w700),
             ),
           ),
-
-          // SizedBox(
-          //   height: 80,
-          // ),
-
           Spacer(
             flex: 8,
           ),
-
           Center(
             child: Image(
               width: 100,
               //height: 300,
               fit: BoxFit.cover,
               image: AssetImage("assets/images/1.png"),
-              // image: AssetImage("assets/images/food-img-1.jpg"),
             ),
           ),
-
-          // SizedBox(
-          //   height: 80,
-          // ),
-
           Spacer(
             flex: 8,
           ),
-
           Center(
             child: Text(
               "Order Rejected",
@@ -1096,11 +1015,9 @@ class _OrderConfirmState extends State<OrderConfirm> {
                   fontWeight: FontWeight.w800),
             ),
           ),
-
           SizedBox(
             height: 5,
           ),
-
           Center(
             child: Container(
               width: 350,
@@ -1114,27 +1031,15 @@ class _OrderConfirmState extends State<OrderConfirm> {
               ),
             ),
           ),
-
           SizedBox(
             height: 5,
           ),
-
-          // SizedBox(
-          //   height: 30,
-          // ),
-
           Spacer(
             flex: 3,
           ),
-
-          // SizedBox(
-          //   height: 120,
-          // ),
-
           Spacer(
             flex: 12,
           ),
-
           Padding(
             padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
             child: Material(
@@ -1181,7 +1086,6 @@ class _OrderConfirmState extends State<OrderConfirm> {
               ),
             ),
           ),
-
           Spacer(
             flex: 5,
           ),
@@ -1195,14 +1099,9 @@ class _OrderConfirmState extends State<OrderConfirm> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          // SizedBox(
-          //   height: 50,
-          // ),
-
           Spacer(
             flex: 5,
           ),
-
           Center(
             child: Text(
               "Order Status",
@@ -1213,7 +1112,6 @@ class _OrderConfirmState extends State<OrderConfirm> {
                   fontWeight: FontWeight.w800),
             ),
           ),
-
           Center(
             child: Text(
               model.orderData.orderedOn,
@@ -1223,33 +1121,19 @@ class _OrderConfirmState extends State<OrderConfirm> {
                   fontWeight: FontWeight.w700),
             ),
           ),
-
-          // SizedBox(
-          //   height: 80,
-          // ),
-
           Spacer(
             flex: 8,
           ),
-
           Center(
             child: Image(
               width: 120,
-              //height: 300,
               fit: BoxFit.cover,
               image: AssetImage("assets/images/4.png"),
-              // image: AssetImage("assets/images/food-img-1.jpg"),
             ),
           ),
-
-          // SizedBox(
-          //   height: 80,
-          // ),
-
           Spacer(
             flex: 8,
           ),
-
           Center(
             child: Text(
               "Order Confirmed",
@@ -1259,11 +1143,9 @@ class _OrderConfirmState extends State<OrderConfirm> {
                   fontWeight: FontWeight.w800),
             ),
           ),
-
           SizedBox(
             height: 5,
           ),
-
           Center(
             child: Container(
               width: 250,
@@ -1277,19 +1159,12 @@ class _OrderConfirmState extends State<OrderConfirm> {
               ),
             ),
           ),
-
           SizedBox(
             height: 5,
           ),
-
-          // SizedBox(
-          //   height: 30,
-          // ),
-
           Spacer(
             flex: 3,
           ),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -1311,15 +1186,9 @@ class _OrderConfirmState extends State<OrderConfirm> {
               ),
             ],
           ),
-
-          // SizedBox(
-          //   height: 120,
-          // ),
-
           Spacer(
             flex: 9,
           ),
-
           Padding(
             padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
             child: Material(
@@ -1367,11 +1236,9 @@ class _OrderConfirmState extends State<OrderConfirm> {
               ),
             ),
           ),
-
           Spacer(
             flex: 3,
           ),
-
           Padding(
             padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
             child: Material(
@@ -1418,7 +1285,6 @@ class _OrderConfirmState extends State<OrderConfirm> {
               ),
             ),
           ),
-
           Spacer(
             flex: 5,
           ),
