@@ -77,11 +77,6 @@ class _SplashScreenState extends State<SplashScreen> {
                 Icons.error,
                 color: Colors.red,
               ),
-              // SpinKitChasingDots(
-              //   size: 30,
-              //   duration: new Duration(milliseconds: 800),
-              //   color: Color(0xfffd5f00),
-              // ),
               SizedBox(
                 height: 50,
               ),
@@ -155,7 +150,6 @@ class _SplashScreenState extends State<SplashScreen> {
           ],
         ),
       );
-      // navigationPage();
     }
   }
 }

@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fooddeliveryboiler/ui/views/home.dart';
 import 'package:fooddeliveryboiler/ui/views/login.dart';
 import 'package:fooddeliveryboiler/ui/views/orderScreen.dart';
+import 'package:fooddeliveryboiler/ui/views/profile.dart';
 
 class AppDrawer extends StatelessWidget {
   AppDrawer({this.model, this.name});
@@ -44,9 +45,14 @@ class AppDrawer extends StatelessWidget {
             Fluttertoast.showToast(
                 msg: "Profile page coming in future releases!",
                 toastLength: Toast.LENGTH_LONG);
-            Navigator.pop(context);
-            // Route route = MaterialPageRoute(builder: (context) => HomeScreen());
-            // Navigator.pushReplacement(context, route);
+            if (model.storage.getCurrentScreen() != "profile_model") {
+              Navigator.pop(context);
+              Route route =
+                  MaterialPageRoute(builder: (context) => ProfileScreen());
+              Navigator.push(context, route);
+            } else {
+              Navigator.pop(context);
+            }
           }),
           Divider(),
           _createDrawerItem(context,
@@ -83,7 +89,7 @@ class AppDrawer extends StatelessWidget {
             Navigator.pop(context);
           }),
           ListTile(
-            title: Text('0.0.1'),
+            title: Text('1.0.1'),
             onTap: () {},
           ),
         ],

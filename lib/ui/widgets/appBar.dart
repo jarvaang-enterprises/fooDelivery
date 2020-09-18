@@ -26,10 +26,13 @@ Widget appBar(BuildContext context,
         onPressed: () {
           if (backAvailable) {
             String prev = model.storage.getPrevScreen();
-            // model.storage.savePrevScreen(model.storage.getCurrentScreen());
-            // String cu = model.modelName;
-            model.storage.saveCurrentScreen(prev);
-            Navigator.pop(context);
+            if (model.storage.getCurrentScreen() == 'deliveryModel') {
+              model.storage.saveCurrentScreen(prev);
+              Navigator.pop(context, "returned");
+            } else {
+              model.storage.saveCurrentScreen(prev);
+              Navigator.pop(context);
+            }
           } else {
             if (model != null) {
               if (model.isSearch) {
@@ -63,7 +66,8 @@ Widget appBar(BuildContext context,
           ],
         )),
     actions: [
-      model.storage.getCurrentScreen() != 'orderScreen'
+      !['orderScreen', 'order_confirm', 'deliveryModel']
+              .contains(model.storage.getCurrentScreen())
           ? PopupMenuButton<Choice>(
               icon: Icon(
                 Icons.filter_list,
@@ -79,7 +83,12 @@ Widget appBar(BuildContext context,
                 }).toList();
               },
             )
-          : Container()
+          : PopupMenuButton<Choice>(
+              icon: Icon(Icons.warning_amber_sharp),
+              itemBuilder: (BuildContext context) {
+                return [].toList();
+              },
+            )
     ],
   );
 }

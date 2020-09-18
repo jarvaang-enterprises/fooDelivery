@@ -25,8 +25,6 @@ class OrderScreenModel {
     }
     total = json['total'];
     status = json['status'];
-    print(json['ordered_on']);
-    // 2020-09-06T17:33:00.000Z
     date = json['ordered_on'] == null
         ? DateFormat('EEE, d MM yyyy kk:mm:ss').format(DateTime.now())
         : DateFormat('EEE, d MM yyyy kk:mm:ss').format(DateTime(
