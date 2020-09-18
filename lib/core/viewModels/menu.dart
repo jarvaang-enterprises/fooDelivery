@@ -1,3 +1,4 @@
+import 'package:fooddeliveryboiler/core/models/deliveryModel.dart';
 import 'package:fooddeliveryboiler/core/models/menuModel.dart';
 import 'package:fooddeliveryboiler/core/models/userModel.dart';
 import 'package:fooddeliveryboiler/core/services/localStorage.dart';
@@ -139,5 +140,16 @@ class MenuModel extends BaseModel {
     print(response);
 
     return response;
+  }
+
+  Future<dynamic> getDelivery() async {
+    var response =
+        await _network.get("/user/${user.uID}/delDetails", apiKey: user.apiKey);
+
+    if (response['success']) {
+      var delData = DeliveryData.fromJson(response['data']);
+      storage.delivery = delData;
+      notifyListeners();
+    }
   }
 }
