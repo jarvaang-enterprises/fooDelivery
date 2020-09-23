@@ -66,7 +66,7 @@ Widget appBar(BuildContext context,
           ],
         )),
     actions: [
-      !['orderScreen', 'order_confirm', 'deliveryModel']
+      !['orderScreen', 'order_confirm', 'deliveryModel', 'profile_model']
               .contains(model.storage.getCurrentScreen())
           ? PopupMenuButton<Choice>(
               icon: Icon(
@@ -84,7 +84,8 @@ Widget appBar(BuildContext context,
               },
             )
           : PopupMenuButton<Choice>(
-              icon: Icon(Icons.warning_amber_sharp),
+              icon: Icon(Icons.warning_amber_sharp,
+                  color: Colors.deepOrangeAccent),
               itemBuilder: (BuildContext context) {
                 return [].toList();
               },

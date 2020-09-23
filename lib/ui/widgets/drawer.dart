@@ -55,19 +55,19 @@ class AppDrawer extends StatelessWidget {
             }
           }),
           Divider(),
-          _createDrawerItem(context,
-              icon: Icons.collections_bookmark, text: 'Steps', onTap: () {
-            Navigator.pop(context);
-          }),
-          _createDrawerItem(context, icon: Icons.face, text: 'Authors',
-              onTap: () {
-            Navigator.pop(context);
-          }),
-          _createDrawerItem(context,
-              icon: Icons.account_box,
-              text: 'Flutter Documentation', onTap: () {
-            Navigator.pop(context);
-          }),
+          // _createDrawerItem(context,
+          //     icon: Icons.collections_bookmark, text: 'Steps', onTap: () {
+          //   Navigator.pop(context);
+          // }),
+          // _createDrawerItem(context, icon: Icons.face, text: 'Authors',
+          //     onTap: () {
+          //   Navigator.pop(context);
+          // }),
+          // _createDrawerItem(context,
+          //     icon: Icons.account_box,
+          //     text: 'Flutter Documentation', onTap: () {
+          //   Navigator.pop(context);
+          // }),
           _createDrawerItem(context,
               icon: Icons.sensor_door,
               text: 'Logout',
@@ -86,6 +86,9 @@ class AppDrawer extends StatelessWidget {
           Divider(),
           _createDrawerItem(context,
               icon: Icons.bug_report, text: 'Report an issue', onTap: () {
+            Fluttertoast.showToast(
+                msg: "Issues coming in next release!",
+                toastLength: Toast.LENGTH_LONG);
             Navigator.pop(context);
           }),
           ListTile(
