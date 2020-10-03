@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class DeliveryData {
   String uID;
   String dId;

@@ -24,8 +24,8 @@ class LoginPage extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  GlobalKey<ScaffoldState> _key = new GlobalKey<ScaffoldState>();
-  Network _network = locator<Network>();
+  final GlobalKey<ScaffoldState> _key = new GlobalKey<ScaffoldState>();
+  final Network _network = locator<Network>();
 
   @override
   Widget build(BuildContext context) {

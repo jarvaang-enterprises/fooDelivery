@@ -24,7 +24,7 @@ class BaseModel extends ChangeNotifier {
   /// @returns ViewState
   ViewState get state => _state;
 
-  String setModelName(String mN) {
+  void setModelName(String mN) {
     _modelName = mN;
   }
 
