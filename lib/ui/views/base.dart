@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fooddeliveryboiler/core/viewModels/base.dart';
 import 'package:fooddeliveryboiler/locator.dart';
 import 'package:provider/provider.dart';
+import 'package:app_settings/app_settings.dart';
 
 class BaseView<T extends BaseModel> extends StatefulWidget {
   final Widget Function(BuildContext context, T model, Widget child) builder;
@@ -19,19 +20,31 @@ class _BaseViewState<T extends BaseModel> extends State<BaseView<T>> {
   void initState() {
     if (widget.onModelReady != null) {
       widget.onModelReady(model);
-      model.storage.savePrevScreen(model.storage.getCurrentScreen());
-      model.storage.saveCurrentScreen(model.modelName);
+      initPlatformState();
+      if (mounted) {
+        model.storage.savePrevScreen(model.storage.getCurrentScreen());
+        model.storage.saveCurrentScreen(model.modelName);
+      }
     }
     super.initState();
   }
 
-  // @override
-  // void didChangeDependencies() {
-  //   if (widget.onModelReady != null) {
-  //     model.storage.saveCurrentScreen(model.modelName);
-  //   }
-  //   super.didChangeDependencies();
-  // }
+  Future<void> initPlatformState() async {
+    if (!mounted) return;
+  }
+
+  @override
+  void didChangeDependencies() {
+    //   if (widget.onModelReady != null) {
+    //     model.storage.saveCurrentScreen(model.modelName);
+    //   }
+    // super.depenedOnInheritedWidgetOfExactType();
+    super.didChangeDependencies();
+  }
+
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

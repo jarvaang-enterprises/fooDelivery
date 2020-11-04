@@ -1,5 +1,5 @@
-import 'package:fooddeliveryboiler/core/models/deliveryModel.dart';
 import 'package:fooddeliveryboiler/core/services/localStorage.dart';
+import 'package:fooddeliveryboiler/core/viewModels/checkout.dart';
 import 'package:fooddeliveryboiler/core/viewModels/delivery.dart';
 import 'package:fooddeliveryboiler/core/viewModels/home.dart';
 import 'package:fooddeliveryboiler/core/viewModels/order.dart';
@@ -32,4 +32,6 @@ Future setupLocator() async {
   locator.registerFactory(() => DeliveryModel());
 
   locator.registerFactory(() => ProfileModel());
+
+  locator.registerFactory(() => CheckoutModel());
 }

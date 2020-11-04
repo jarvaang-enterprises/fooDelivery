@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fooddeliveryboiler/locator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fooddeliveryboiler/ui/views/login.dart';
-import 'package:fooddeliveryboiler/ui/views/orderConfim.dart';
 import 'package:fooddeliveryboiler/ui/views/splashscreen.dart';
 
 Future<void> main() async {

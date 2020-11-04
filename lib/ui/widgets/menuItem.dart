@@ -34,6 +34,7 @@ class _MenuItemCardState extends State<MenuItemCard> {
         // }
       },
       child: Container(
+        width: MediaQuery.of(context).size.width,
         foregroundDecoration: widget.data.isAvailable
             ? BoxDecoration()
             : BoxDecoration(

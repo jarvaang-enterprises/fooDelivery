@@ -4,8 +4,9 @@ class DeliveryData {
   double long;
   double lat;
   String dist;
+  String name;
 
-  DeliveryData({this.uID, this.dId, this.long, this.lat, this.dist});
+  DeliveryData({this.uID, this.dId, this.long, this.lat, this.dist, this.name});
 
   DeliveryData.fromJson(Map<String, dynamic> json) {
     uID = json['userId'];
@@ -13,6 +14,7 @@ class DeliveryData {
     long = json['longitude'];
     lat = json['latitude'];
     dist = json['distance'];
+    name = json['name'];
   }
 
   Map<String, dynamic> toJson() {
@@ -22,6 +24,7 @@ class DeliveryData {
     data['longitude'] = this.long;
     data['latitude'] = this.lat;
     data['distance'] = this.dist;
+    data['name'] = this.name;
 
     return data;
   }

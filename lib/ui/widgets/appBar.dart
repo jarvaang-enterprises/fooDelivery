@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fooddeliveryboiler/core/models/menuModel.dart';
 
 /// Widget that builds our application specific appBar
 ///
@@ -8,11 +9,19 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 ///
 /// @Junior Lawrence Kibirige - aanga26@gmail.com
 Widget appBar(BuildContext context,
-    {bool backAvailable = false, dynamic model, GlobalKey<ScaffoldState> key}) {
+    {bool backAvailable = false,
+    dynamic data,
+    dynamic model,
+    GlobalKey<ScaffoldState> key}) {
   Choice _selectedChoice = choices[0];
 
   void _select(Choice choice) {
     _selectedChoice = choice;
+  }
+
+  void saveOrder(Choice c) {
+    Map<String, MenuData> order = model.cart;
+    model.storage.saveCart(order);
   }
 
   return AppBar(
@@ -21,14 +30,27 @@ Widget appBar(BuildContext context,
     backgroundColor: Colors.deepOrangeAccent,
     leading: IconButton(
         iconSize: 25,
-        icon:
-            Icon(backAvailable ? Icons.arrow_back_ios : Icons.restaurant_menu),
+        icon: (model.storage.getCurrentScreen() == 'checkoutModel')
+            ? Icon(
+                Icons.check,
+                size: 40.0,
+                color: Colors.greenAccent,
+              )
+            : Icon(
+                backAvailable ? Icons.arrow_back_ios : Icons.restaurant_menu),
         onPressed: () {
           if (backAvailable) {
             String prev = model.storage.getPrevScreen();
             if (model.storage.getCurrentScreen() == 'deliveryModel') {
               model.storage.saveCurrentScreen(prev);
               Navigator.pop(context, "returned");
+            } else if (model.storage.getCurrentScreen() == 'checkoutModel') {
+              model.storage.saveCurrentScreen(prev);
+              data['items'] = [];
+              model.cart.forEach((key, item) {
+                data['items'].add(item);
+              });
+              Navigator.pop(context, data);
             } else {
               model.storage.saveCurrentScreen(prev);
               Navigator.pop(context);
@@ -66,8 +88,13 @@ Widget appBar(BuildContext context,
           ],
         )),
     actions: [
-      !['orderScreen', 'order_confirm', 'deliveryModel', 'profile_model']
-              .contains(model.storage.getCurrentScreen())
+      ![
+        'orderScreen',
+        'order_confirm',
+        'deliveryModel',
+        'profile_model',
+        'checkoutModel'
+      ].contains(model.storage.getCurrentScreen())
           ? PopupMenuButton<Choice>(
               icon: Icon(
                 Icons.filter_list,
@@ -84,8 +111,14 @@ Widget appBar(BuildContext context,
               },
             )
           : PopupMenuButton<Choice>(
-              icon: Icon(Icons.warning_amber_sharp,
-                  color: Colors.deepOrangeAccent),
+              icon:
+                  // (model.storage.getCurrentScreen() != 'checkoutModel')?
+                  Icon(Icons.warning_amber_sharp,
+                      color: Colors.deepOrangeAccent),
+              // : Icon(Icons.save),
+              // onSelected: (model.storage.getCurrentScreen() != 'checkoutModel')
+              //     ? () => {}
+              //     : saveOrder,
               itemBuilder: (BuildContext context) {
                 return [].toList();
               },

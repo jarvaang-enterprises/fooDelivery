@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class LoginModel extends BaseModel {
   User _cUser;
   UserData _lUser;
   StreamSubscription<User> _listener;
+  bool logout = false;
 
   /// Holds true if user doesn't exist in localDatabase
   bool newUser = false;
@@ -70,8 +72,10 @@ class LoginModel extends BaseModel {
         currentUser = user;
       });
     } else {
-      UserData _userData = storage.user;
-      localUser = _userData;
+      if (!logout) {
+        UserData _userData = storage.user;
+        localUser = _userData;
+      }
       setViewState(ViewState.Idle);
     }
 
@@ -113,24 +117,32 @@ class LoginModel extends BaseModel {
             idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
 
         final User user = (await _auth.signInWithCredential(credential)).user;
-        // print(user);
+
+        currentUser = user;
+        setViewState(ViewState.Idle);
         var iu = await _isUser(user);
-        Route route;
+        // currentUser = user;
+        // setViewState(ViewState.Idle);
 
         if (user != null && iu['success']) {
           print(iu);
+          currentUser = user;
           // Check if the user requires onboarding, Then create route for onboarding and if not then take him to home page
           // route = MaterialPageRoute(
           //     builder: (context) => _basicSetupServices.getStartScreen());
           // return route;
+          setViewState(ViewState.Idle);
         } else {
           localUser = UserData();
+          // currentUser = user;
           newUser = true;
         }
       }
     } catch (exc) {
       if (exc is PlatformException) {
         this.errorMessage = "Check your internet Connection";
+      } else {
+        this.errorMessage = exc.toString();
       }
     }
     setViewState(ViewState.Idle);
@@ -138,15 +150,26 @@ class LoginModel extends BaseModel {
   }
 
   Future<dynamic> _isUser(User user) async {
-    var response = await _network.post('/user/' + user.email);
+    Map<String, String> reqHeaders = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      'x-app-key': utf8.fuse(base64).encode("pleasedon'tcopyortranspose(c)(r)")
+    };
+    var response =
+        await _network.post('/user/' + user.email, headers: reqHeaders);
     return response;
   }
 
   void signOut() async {
+    // setViewState(ViewState.Busy);
+    logout = true;
     await _googleSignIn.signOut();
     await _auth.signOut();
     storage.saveStringToDisk('user', null);
+    storage.saveStringToDisk('DeliveryData', null);
     storage.saveGetStartedToDisk('notFirstTime', false);
+    logout = false;
+    setViewState(ViewState.Idle);
   }
 
   void loginUsingEmail(String email, String password) async {

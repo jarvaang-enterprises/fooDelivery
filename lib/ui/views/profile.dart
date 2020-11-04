@@ -3,6 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fooddeliveryboiler/core/viewModels/base.dart';
 import 'package:fooddeliveryboiler/core/viewModels/profile.dart';
 import 'package:fooddeliveryboiler/ui/views/base.dart';
+import 'package:fooddeliveryboiler/ui/views/delivery.dart';
 import 'package:fooddeliveryboiler/ui/widgets/appBar.dart';
 import 'package:fooddeliveryboiler/ui/widgets/drawer.dart';
 
@@ -13,6 +14,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final GlobalKey<ScaffoldState> _key = new GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return BaseView<ProfileModel>(
@@ -50,7 +52,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               vertical: 28.0,
                             ),
                             child: CircleAvatar(
-                              radius: 70.0,
+//                              radius: 70.0,
+                              maxRadius: 70.0,
+                              minRadius: 60.0,
                               backgroundColor: Theme.of(context).platform ==
                                       TargetPlatform.iOS
                                   ? Colors.blue
@@ -66,8 +70,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         style: TextStyle(fontSize: 40.0),
                                       ),
                                     )
-                                  : NetworkImage(model.user.photoUrl,
-                                      scale: 1.0),
+                                  : Image(
+                                      image: NetworkImage(model.user.photoUrl,
+                                          scale: 1),
+                                    ),
                             ),
                           ),
                         ),
@@ -103,6 +109,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                         ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: Center(
+                            child: Padding(
+                              padding: EdgeInsets.only(bottom: 10.0),
+                              child: MaterialButton(
+                                elevation: 0.5,
+                                minWidth: double.maxFinite,
+                                height: 50,
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              DeliveryScreen()));
+                                },
+                                color: Colors.brown,
+                                child: Center(
+                                  child: Text(
+                                    'Update Delivery Data',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                                textColor: Colors.white,
+                              ),
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ),

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fooddeliveryboiler/core/models/orderModel.dart';
 import 'package:fooddeliveryboiler/core/viewModels/base.dart';
@@ -60,6 +61,8 @@ class _OrderConfirmState extends State<OrderConfirm> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIOverlays(
+        [SystemUiOverlay.top, SystemUiOverlay.bottom]);
     return BaseView<OrderModel>(
       onModelReady: (model) {
         model.getCurrentUser();
@@ -176,7 +179,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
             "Confirming with Restaurant",
             style: TextStyle(
               color: Colors.blue.withOpacity(0.9),
-              fontSize: 30,
+              fontSize: MediaQuery.of(context).size.width / 18,
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -332,7 +335,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
               "Order has been Dispatched",
               style: TextStyle(
                   color: Colors.blue.withOpacity(0.9),
-                  fontSize: 30,
+                  fontSize: MediaQuery.of(context).size.width / 18,
                   fontWeight: FontWeight.w800),
             ),
           ),
@@ -513,7 +516,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
               "Order is Ready",
               style: TextStyle(
                   color: Colors.blue.withOpacity(0.9),
-                  fontSize: 30,
+                  fontSize: MediaQuery.of(context).size.width / 18,
                   fontWeight: FontWeight.w800),
             ),
           ),
@@ -672,7 +675,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
               "Preparing your Order",
               style: TextStyle(
                   color: Colors.green.withOpacity(0.9),
-                  fontSize: 30,
+                  fontSize: MediaQuery.of(context).size.width / 18,
                   fontWeight: FontWeight.w800),
             ),
           ),
@@ -883,7 +886,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
               "Order Cancelled",
               style: TextStyle(
                   color: Colors.red.withOpacity(0.9),
-                  fontSize: 30,
+                  fontSize: MediaQuery.of(context).size.width / 18,
                   fontWeight: FontWeight.w800),
             ),
           ),
@@ -1011,7 +1014,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
               "Order Rejected",
               style: TextStyle(
                   color: Colors.red.withOpacity(0.9),
-                  fontSize: 30,
+                  fontSize: MediaQuery.of(context).size.width / 18,
                   fontWeight: FontWeight.w800),
             ),
           ),
@@ -1139,7 +1142,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
               "Order Confirmed",
               style: TextStyle(
                   color: Colors.green.withOpacity(0.9),
-                  fontSize: 30,
+                  fontSize: MediaQuery.of(context).size.width / 18,
                   fontWeight: FontWeight.w800),
             ),
           ),

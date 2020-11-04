@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:fooddeliveryboiler/core/models/deliveryModel.dart';
+import 'package:fooddeliveryboiler/core/models/menuModel.dart';
 import 'package:fooddeliveryboiler/core/models/userModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,6 +25,7 @@ class LocalStorage {
 
   static const String UserKey = 'user';
   static const String DelDataKey = 'DeliveryData';
+  static const String OrderDataKey = 'OrderData';
 
   UserData get user {
     var userJson = _getFromDisk(UserKey);
@@ -39,6 +41,14 @@ class LocalStorage {
 
   set delivery(DeliveryData d) {
     saveStringToDisk(DelDataKey, json.encode(d.toJson()));
+  }
+
+  void saveCart(Map<String, dynamic> order) {
+    saveStringToDisk(OrderDataKey, jsonEncode(order));
+  }
+
+  Map<String, MenuData> getSavedCart(Map<String, MenuData> order) {
+    return jsonDecode(_getFromDisk(OrderDataKey));
   }
 
   DeliveryData get delivery {

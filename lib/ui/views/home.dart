@@ -29,8 +29,8 @@ class HomeScreen extends StatelessWidget {
     }
 
     _redirect() async {
-      var _duration = new Duration(milliseconds: 500);
-      return new Timer(_duration, navigationPage);
+      var _duration = new Duration(milliseconds: 2000);
+      return navigationPage;
     }
 
     redirectUser(context) {

@@ -1,12 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fooddeliveryboiler/ui/views/home.dart';
 import 'package:fooddeliveryboiler/ui/views/login.dart';
 import 'package:fooddeliveryboiler/ui/views/orderScreen.dart';
 import 'package:fooddeliveryboiler/ui/views/profile.dart';
+import 'package:fooddeliveryboiler/ui/views/splashscreen.dart';
 
 class AppDrawer extends StatelessWidget {
   AppDrawer({this.model, this.name});
+
   final model;
   final name;
 
@@ -75,12 +79,23 @@ class AppDrawer extends StatelessWidget {
                     Navigator.pop(context),
                     if (model != null)
                       {
+                        model.signOut(),
                         model.storage.saveStringToDisk('user', null),
+                        model.storage.saveStringToDisk('DeliveryData', null),
                         model.signOut(),
                         Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginPage()))
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SplashScreen(),
+                          ),
+                        )
+
+                        // Navigator.pushReplacement(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => LoginPage(),
+                        //   ),
+                        // )
                       },
                   }),
           Divider(),
@@ -108,9 +123,9 @@ class AppDrawer extends StatelessWidget {
         backgroundColor: Theme.of(context).platform == TargetPlatform.iOS
             ? Colors.blue
             : Colors.white,
-        child: model.user.photoUrl == null
+        child: model.user.photoUrl == null || model.user.photoUrl == ""
             ? Padding(
-                padding: const EdgeInsets.only(top: 10.0),
+                padding: const EdgeInsets.only(top: 5.0),
                 child: Text(
                   model.user.displayName
                       .split(' ')[0]
@@ -119,7 +134,8 @@ class AppDrawer extends StatelessWidget {
                   style: TextStyle(fontSize: 40.0),
                 ),
               )
-            : NetworkImage(model.user.photoUrl, scale: 1.0),
+            : Container(),
+        backgroundImage: NetworkImage(model.user.photoUrl ?? "", scale: 1.0),
       ),
     );
   }

@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fooddeliveryboiler/core/models/userModel.dart';
-import 'package:fooddeliveryboiler/core/services/localStorage.dart';
 import 'package:fooddeliveryboiler/core/services/networking.dart';
 import 'package:fooddeliveryboiler/core/viewModels/base.dart';
 import 'package:fooddeliveryboiler/core/viewModels/loginModel.dart';
@@ -30,7 +29,10 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseView<LoginModel>(onModelReady: (model) {
-      model.checkCurrentUser();
+      if (model.logout == true)
+        Timer(Duration(seconds: 1), () => model.checkCurrentUser());
+      else
+        model.checkCurrentUser();
     }, builder: (context, model, child) {
       if ((model.localUser == null)) {
         if (model.currentUser == null) {
@@ -335,13 +337,13 @@ class LoginPage extends StatelessWidget {
       var data = {'email': user.email, 'passwd': user.uid};
       var res = await _network.post('/auth', body: data);
       if (res['success']) {
-        model.errorMessage =
-            "Getting required authentication parameters.\nPlease wait ... (Step 3 of 3)";
+        // model.errorMessage =
+        //     "Getting required authentication parameters.\nPlease wait ... (Step 3 of 3)";
         var resp = await _network.get('/users/' + res['accessId'],
             apiKey: res['accessToken']);
         if (resp['success']) {
-          model.errorMessage =
-              "Finalizing user setup.\nPlease wait ... (Step 3 of 3)";
+          // model.errorMessage =
+          //     "Finalizing user setup.\nPlease wait ... (Step 3 of 3)";
           var loginData = {
             'accessId': res['accessId'],
             'displayName': user.displayName,
@@ -355,9 +357,15 @@ class LoginPage extends StatelessWidget {
           UserData userData = new UserData.fromJson(loginData);
           model.storage.user = userData;
           Route route = MaterialPageRoute(builder: (context) => HomeScreen());
-          Navigator.pushReplacement(context, route);
+          Timer(Duration(seconds: 1),
+              () => {Navigator.pushReplacement(context, route)});
         }
+      } else {
+        print(res);
       }
+    } else {
+      print(model.localUser);
+      redirectUser(context);
     }
   }
 

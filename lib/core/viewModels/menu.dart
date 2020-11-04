@@ -26,7 +26,7 @@ class MenuModel extends BaseModel {
 
   LocalStorage get storage => _storage;
 
-  Map<String, MenuData> _orderData = Map<String, MenuData>();
+//  Map<String, MenuData> _orderData = Map<String, MenuData>();
 
   List<MenuData> _menuData;
 
@@ -57,41 +57,6 @@ class MenuModel extends BaseModel {
     await Future.delayed(Duration(seconds: 2));
     setViewState(ViewState.Idle);
   }
-
-  addOrder(MenuData data) {
-    if (_orderData[data.sId] != null) {
-      _orderData[data.sId].totalItems++;
-    } else {
-      _orderData[data.sId] = data;
-      _orderData[data.sId].totalItems = 1;
-    }
-
-    notifyListeners();
-  }
-
-  removeOrder(MenuData data) {
-    if (_orderData[data.sId] != null) {
-      if (_orderData[data.sId].totalItems == 1) {
-        _orderData.remove(data.sId);
-      } else {
-        _orderData[data.sId].totalItems--;
-      }
-    } else {
-      throw new Exception("No order to remove");
-    }
-
-    notifyListeners();
-  }
-
-  getItemCount(data) {
-    if (_orderData[data.sId] == null) {
-      return 0;
-    } else {
-      return _orderData[data.sId].totalItems;
-    }
-  }
-
-  getCart() => _orderData;
 
   dynamic getMenuData(restaurantId) async {
     setViewState(ViewState.Busy);
@@ -137,7 +102,6 @@ class MenuModel extends BaseModel {
 
     var response = await _network.post("/qeats/orders?token=wearegoingtorockit",
         body: jsonData, headers: reqHeaders);
-    print(response);
 
     return response;
   }

@@ -132,7 +132,7 @@ class _OrdersItemState extends State<OrdersItem> {
             " Confirming with Restaurant",
             style: TextStyle(
               color: Colors.blue.withOpacity(0.9),
-              fontSize: 14,
+              fontSize: (MediaQuery.of(context).size.width * 0.7) / 20,
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -156,7 +156,7 @@ class _OrdersItemState extends State<OrdersItem> {
             " Order Confirmed",
             style: TextStyle(
               color: Colors.orange.withOpacity(0.9),
-              fontSize: 14,
+              fontSize: (MediaQuery.of(context).size.width * 0.7) / 20,
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -180,7 +180,7 @@ class _OrdersItemState extends State<OrdersItem> {
             " Order Rejected",
             style: TextStyle(
               color: Colors.red.withOpacity(0.9),
-              fontSize: 14,
+              fontSize: (MediaQuery.of(context).size.width * 0.7) / 20,
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -204,7 +204,7 @@ class _OrdersItemState extends State<OrdersItem> {
             " Order Cancelled",
             style: TextStyle(
               color: Colors.red.withOpacity(0.9),
-              fontSize: 14,
+              fontSize: (MediaQuery.of(context).size.width * 0.7) / 20,
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -228,7 +228,7 @@ class _OrdersItemState extends State<OrdersItem> {
             " Preparing your Order",
             style: TextStyle(
                 color: Colors.yellow.shade600,
-                fontSize: 14,
+                fontSize: (MediaQuery.of(context).size.width * 0.7) / 20,
                 fontWeight: FontWeight.w800),
           ),
         ],
@@ -251,7 +251,7 @@ class _OrdersItemState extends State<OrdersItem> {
             " Order Ready",
             style: TextStyle(
                 color: Colors.blue.withOpacity(0.9),
-                fontSize: 14,
+                fontSize: (MediaQuery.of(context).size.width * 0.7) / 20,
                 fontWeight: FontWeight.w800),
           ),
         ],
@@ -274,7 +274,7 @@ class _OrdersItemState extends State<OrdersItem> {
             " Order Dispatched",
             style: TextStyle(
                 color: Colors.green.withOpacity(0.9),
-                fontSize: 14,
+                fontSize: (MediaQuery.of(context).size.width * 0.7) / 20,
                 fontWeight: FontWeight.w800),
           ),
         ],

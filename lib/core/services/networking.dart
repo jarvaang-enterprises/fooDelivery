@@ -7,8 +7,7 @@ class Network {
 
   final JsonDecoder _decoder = new JsonDecoder();
 
-  // ignore: non_constant_identifier_names
-  // static final BASE_URL = "http://192.168.56.1:5500";
+  // static final baseUrl = "http://192.168.43.8:5500";
   static final baseUrl = "http://10.0.2.2:5500";
 
   // ignore: non_constant_identifier_names
@@ -97,26 +96,31 @@ class Network {
 
   Future<dynamic> post(String url, {Map headers, body, encoding}) {
     String completeUrl = baseUrl + API_VERSION + url;
-    return http
-        .post(completeUrl, body: body, headers: headers, encoding: encoding)
-        .then((http.Response response) {
-      final String res = response.body;
-      final int statusCode = response.statusCode;
+    dynamic ret;
+    try {
+      return http
+          .post(completeUrl, body: body, headers: headers, encoding: encoding)
+          .then((response) {
+        final String res = response.body;
+        final int statusCode = response.statusCode;
 
-      // loginModel.loginRequired = true;
+        // loginModel.loginRequired = true;
 
-      if (statusCode == 401) {
-        // Route route = MaterialPageRoute(builder: (context) => LoginPage());
-        // _basicSetupServices.navigatorKey.currentState
-        // .pushAndRemoveUntil(route, (Route<dynamic> route) => false);
-        throw new Exception("Error while fetching data");
-      }
-      try {
-        return _decoder.convert(res);
-      } catch (err) {
-        return _decoder
-            .convert("{\"success\": false, \"emsg\": \"An error occurred\"}");
-      }
-    });
+        if (statusCode == 401) {
+          // Route route = MaterialPageRoute(builder: (context) => LoginPage());
+          // _basicSetupServices.navigatorKey.currentState
+          // .pushAndRemoveUntil(route, (Route<dynamic> route) => false);
+          throw new Exception("Error while fetching data");
+        }
+        try {
+          return _decoder.convert(res);
+        } catch (err) {
+          return _decoder
+              .convert("{\"success\": false, \"emsg\": \"An error occurred\"}");
+        }
+      });
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }

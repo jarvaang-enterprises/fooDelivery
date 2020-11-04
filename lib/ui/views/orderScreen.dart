@@ -96,7 +96,8 @@ class _OrdersViewState extends State<OrdersView> {
                                 model.orders != null
                                     ? "We would like to thank you for the continued support"
                                     : "",
-                                style: GoogleFonts.kristi(
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.aladin(
                                     fontSize: 20, fontStyle: FontStyle.italic),
                               ),
                             ),
