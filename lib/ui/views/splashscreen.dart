@@ -60,7 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
           width: double.maxFinite,
           child: Image(
             fit: BoxFit.fill,
-            image: AssetImage('assets/splash/splash.png'),
+            image: AssetImage('assets/splash/splash_test.png'),
           ),
         ),
       );
@@ -86,13 +86,14 @@ class _SplashScreenState extends State<SplashScreen> {
       );
     } else {
       return Scaffold(
-        backgroundColor: Colors.blueGrey,
+        // backgroundColor: Color.fromRGBO(225, 225, 220, 1),
+        backgroundColor: Colors.white,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             //We take the image from the assets
             Image.asset(
-              'assets/icons/delivery_logo_trans.png',
+              'assets/icons/marsLogo.png',
               height: 230,
             ),
             SizedBox(
