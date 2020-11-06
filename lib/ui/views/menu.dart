@@ -56,6 +56,7 @@ class _MenuState extends State<Menu> {
     Route route;
     var checkout;
     var response;
+    var payment;
     new Timer(new Duration(seconds: 3), () async {
       if (delData != null) {
         r = await showDialog(
@@ -174,6 +175,65 @@ class _MenuState extends State<Menu> {
         );
         checkout = await Navigator.push(context, route);
         if (checkout != null && checkout['items'].length != 0) {
+          payment = await showDialog(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+              // contentPadding: EdgeInsets.symmetric(horizontal: 1.0),
+              title: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Order Confirmation",
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+              content: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Container(
+                  height: MediaQuery.of(context).size.height / 2.5,
+                  width: double.infinity,
+                  child: Column(
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Await a call to confirm your order?",
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            "Please continue to process your payment!",
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              actions: [
+                TextButton.icon(
+                  onPressed: () =>
+                      {Navigator.of(context, rootNavigator: true).pop(false)},
+                  icon: Icon(
+                    Icons.cancel_outlined,
+                    color: Colors.red,
+                  ),
+                  label: Text(
+                    "No",
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+                TextButton.icon(
+                  onPressed: () =>
+                      Navigator.of(context, rootNavigator: true).pop(true),
+                  icon: Icon(Icons.check),
+                  label: Text("Yes"),
+                ),
+              ],
+            ),
+          );
           response = await model.sendNewOrder(json.encode(checkout));
           if (response['success']) {
             _cart.clear();
@@ -342,13 +402,6 @@ class _MenuState extends State<Menu> {
                                 scrollDirection: Axis.vertical,
                                 padding: const EdgeInsets.all(8.0),
                                 children: [
-                                  Text("Breakfast"),
-                                  for (var data in !model.isSearch
-                                      ? model.menuData
-                                      : model.searchDataJson)
-                                    MenuItemCard(data: data),
-                                  SizedBox(height: 80),
-                                  Text("Lunch"),
                                   for (var data in !model.isSearch
                                       ? model.menuData
                                       : model.searchDataJson)

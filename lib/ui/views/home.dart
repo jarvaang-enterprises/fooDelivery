@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fooddeliveryboiler/core/models/restaurantModel.dart';
+import 'package:fooddeliveryboiler/core/services/networking.dart';
 import 'package:fooddeliveryboiler/core/viewModels/base.dart';
 import 'package:fooddeliveryboiler/core/viewModels/home.dart';
 import 'package:fooddeliveryboiler/ui/views/base.dart';
@@ -17,11 +19,13 @@ import 'package:fooddeliveryboiler/ui/widgets/restaurantCard.dart';
 class HomeScreen extends StatelessWidget {
   static const String routeName = '/';
   final FocusNode searchFocus = new FocusNode();
+  final FocusNode telcosFocus = new FocusNode();
   final GlobalKey<ScaffoldState> _scafflodKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     TextEditingController search = new TextEditingController();
+    TextEditingController telcos = new TextEditingController();
 
     void navigationPage() {
       Route route = MaterialPageRoute(builder: (context) => LoginPage());
@@ -29,7 +33,6 @@ class HomeScreen extends StatelessWidget {
     }
 
     _redirect() async {
-      var _duration = new Duration(milliseconds: 2000);
       return navigationPage;
     }
 
@@ -39,6 +42,105 @@ class HomeScreen extends StatelessWidget {
           _duration,
           () => Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) => DeliveryScreen())));
+    }
+
+    mobileCheck(BuildContext context, HomeModel model) async {
+      Network _network = model.network;
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          // contentPadding: EdgeInsets.symmetric(horizontal: 1.0),
+          title: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: Icon(
+                  Icons.warning_outlined,
+                  size: 35.0,
+                  color: Colors.red,
+                ),
+              ),
+              Text(
+                "Mobile Contact Missing",
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          content: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Container(
+              height: MediaQuery.of(context).size.height / 6.5,
+              width: double.infinity,
+              child: Column(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Please add your number to the system?",
+                        textAlign: TextAlign.center,
+                      ),
+                      TextField(
+                        controller: telcos,
+                        focusNode: telcosFocus,
+                        keyboardType: TextInputType.phone,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                        ),
+                        autofocus: true,
+                        minLines: 1,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton.icon(
+              onPressed: () {
+                if (telcos.text != "" &&
+                    ((telcos.text.length == 10 &&
+                            telcos.text.substring(0, 1) == '0') ||
+                        (telcos.text.length == 13 &&
+                            telcos.text.substring(0, 1) == '+')))
+                  Navigator.of(context, rootNavigator: true).pop(true);
+                else
+                  Fluttertoast.showToast(
+                    msg: "Please input a correct phone number",
+                  );
+              },
+              icon: Icon(Icons.check),
+              label: Text("Update"),
+            ),
+          ],
+        ),
+      ).then((value) async {
+        if (value != null) {
+          if (value) {
+            Map<String, String> reqHeaders = {
+              'Content-type': 'application/json',
+              'Accept': 'application/json',
+              'x-api-key': model.user.apiKey
+            };
+            var response = await _network.post('/user/${model.user.uID}/tel',
+                body: json.encode({'mobile': telcos.text}),
+                headers: reqHeaders);
+            if (response['success']) {
+              model.user.tel = telcos.text;
+              model.storage.user = model.user;
+              Fluttertoast.showToast(msg: response['msg']);
+            } else {
+              Fluttertoast.showToast(msg: response.msg);
+            }
+          }
+        } else {
+          Fluttertoast.showToast(
+              msg: "You have to enter a number, \n\t Press update");
+          mobileCheck(context, model);
+        }
+      }).catchError((onError) => print(onError));
     }
 
     return BaseView<HomeModel>(
@@ -60,6 +162,10 @@ class HomeScreen extends StatelessWidget {
             Fluttertoast.showToast(
                 msg: "No delivery data!", toastLength: Toast.LENGTH_LONG);
             // redirectUser(context);
+          }
+          if (model.user.tel == "") {
+            var _duration = new Duration(milliseconds: 2000);
+            Timer(_duration, () => mobileCheck(context, model));
           }
           return Scaffold(
             key: _scafflodKey,

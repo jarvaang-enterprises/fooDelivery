@@ -71,14 +71,14 @@ class LoginPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              'Sign in to Food Delivery and continue',
+                              'Sign in to Mars Cafe Delivery',
                               textAlign: TextAlign.center,
                               style: GoogleFonts.openSans(
                                   color: Colors.white, fontSize: 28),
                             ),
                             SizedBox(height: 20),
                             Text(
-                              'Enter your email and password below to continue to the Food Delivery and let the food hunt begin!',
+                              'Enter your email and password below to continue to Mars Cafe Delivery and let the food hunt begin!',
                               textAlign: TextAlign.center,
                               style: GoogleFonts.openSans(
                                   color: Colors.white, fontSize: 14),

@@ -6,6 +6,7 @@ class UserData {
   int otherPermissionLevel;
   String photoUrl;
   String apiKey;
+  String tel;
 
   UserData(
       {this.uID,
@@ -14,7 +15,8 @@ class UserData {
       this.permissionLevel,
       this.otherPermissionLevel,
       this.photoUrl,
-      this.apiKey});
+      this.apiKey,
+      this.tel});
 
   UserData.fromJson(Map<String, dynamic> json) {
     uID = json['accessId'];
@@ -24,6 +26,7 @@ class UserData {
     otherPermissionLevel = json['otherPermissionLevel'];
     photoUrl = json['photoUrl'];
     apiKey = json['accessToken'];
+    tel = json['tel'] == null ? "" : json['tel'];
   }
 
   Map<String, dynamic> toJson() {
@@ -35,6 +38,7 @@ class UserData {
     data['permissionLevel'] = this.permissionLevel;
     data['photoUrl'] = this.photoUrl;
     data['accessToken'] = this.apiKey;
+    data['tel'] = this.tel;
 
     return data;
   }

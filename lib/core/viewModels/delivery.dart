@@ -52,7 +52,8 @@ class DeliveryModel extends BaseModel {
     if (await geolocator.isLocationServiceEnabled()) {
       if (status == GeolocationStatus.granted) {
         geolocator
-            .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+            .getCurrentPosition(
+                desiredAccuracy: LocationAccuracy.bestForNavigation)
             .then((position) async {
           _currentPosition = position;
           await _getAddressFromLatLng(geolocator);

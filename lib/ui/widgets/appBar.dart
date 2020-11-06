@@ -30,7 +30,8 @@ Widget appBar(BuildContext context,
     backgroundColor: Colors.deepOrangeAccent,
     leading: IconButton(
         iconSize: 25,
-        icon: (model.storage.getCurrentScreen() == 'checkoutModel')
+        icon: (model != null &&
+                model.storage.getCurrentScreen() == 'checkoutModel')
             ? Icon(
                 Icons.check,
                 size: 40.0,
@@ -93,8 +94,10 @@ Widget appBar(BuildContext context,
         'order_confirm',
         'deliveryModel',
         'profile_model',
-        'checkoutModel'
-      ].contains(model.storage.getCurrentScreen())
+        'checkoutModel',
+        'splashScreen'
+      ].contains(
+              model != null ? model.storage.getCurrentScreen() : 'splashScreen')
           ? PopupMenuButton<Choice>(
               icon: Icon(
                 Icons.filter_list,
@@ -134,9 +137,10 @@ class Choice {
 }
 
 const List<Choice> choices = const <Choice>[
-  const Choice(title: '', icon: FontAwesomeIcons.caretDown),
-  const Choice(title: 'By Rating Asc', icon: FontAwesomeIcons.sortUp),
-  const Choice(title: 'By Rating Desc', icon: FontAwesomeIcons.sortDown),
+  const Choice(title: 'Select Category', icon: FontAwesomeIcons.caretDown),
+  const Choice(title: 'Breakfast', icon: FontAwesomeIcons.sortUp),
+  const Choice(title: 'Lunch', icon: FontAwesomeIcons.sortDown),
+  const Choice(title: 'Snacks', icon: FontAwesomeIcons.sortDown),
 ];
 
 class ChoiceCard extends StatelessWidget {

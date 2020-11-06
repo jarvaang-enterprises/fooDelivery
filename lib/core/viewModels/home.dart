@@ -15,6 +15,7 @@ class HomeModel extends BaseModel {
   String modelName = "homeModal";
   LocalStorage _storage = locator<LocalStorage>();
   LoginModel _loginModel = locator<LoginModel>();
+  Network get network => _network;
 
   UserData _user;
   DeliveryData _deliveryData;

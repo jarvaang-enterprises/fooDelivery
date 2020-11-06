@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fooddeliveryboiler/ui/views/home.dart';
-import 'package:fooddeliveryboiler/ui/views/login.dart';
 import 'package:fooddeliveryboiler/ui/views/orderScreen.dart';
 import 'package:fooddeliveryboiler/ui/views/profile.dart';
 import 'package:fooddeliveryboiler/ui/views/splashscreen.dart';
@@ -89,13 +88,6 @@ class AppDrawer extends StatelessWidget {
                             builder: (context) => SplashScreen(),
                           ),
                         )
-
-                        // Navigator.pushReplacement(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => LoginPage(),
-                        //   ),
-                        // )
                       },
                   }),
           Divider(),
@@ -107,7 +99,7 @@ class AppDrawer extends StatelessWidget {
             Navigator.pop(context);
           }),
           ListTile(
-            title: Text('1.0.1'),
+            title: Text('Version: 1.0.0'),
             onTap: () {},
           ),
         ],

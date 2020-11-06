@@ -75,6 +75,11 @@ class LoginModel extends BaseModel {
       if (!logout) {
         UserData _userData = storage.user;
         localUser = _userData;
+        if (localUser != null && storage.delivery == null) {
+          var d = await _network.get('/user/${localUser.uID}/delDetails',
+              apiKey: localUser.apiKey);
+          storage.delivery = DeliveryData.fromJson(d['data']);
+        }
       }
       setViewState(ViewState.Idle);
     }
