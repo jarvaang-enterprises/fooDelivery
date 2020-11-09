@@ -477,6 +477,5 @@ class LoginPage extends StatelessWidget {
         }
       }
     }
-    print(uData);
   }
 }

@@ -137,7 +137,7 @@ class DeliveryScreen extends StatelessWidget {
                                 child: MaterialButton(
                                   elevation: 0,
                                   // width: double.maxFinite,
-                                  height: 30,
+                                  height: 25,
                                   onPressed: () {
                                     model.getCurrentLoction();
                                   },
@@ -155,12 +155,9 @@ class DeliveryScreen extends StatelessWidget {
                               )
                             ],
                           ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
                           ClipRect(
                             child: Container(
-                              height: MediaQuery.of(context).size.height * .74,
+                              height: MediaQuery.of(context).size.height * .70,
                               width: MediaQuery.of(context).size.width - 5,
                               child: Padding(
                                 padding: EdgeInsets.fromLTRB(12, 18, 12, 15),

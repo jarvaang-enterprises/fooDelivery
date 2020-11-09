@@ -16,6 +16,7 @@ class CheckoutModel extends BaseModel {
   Map<String, MenuData> _cart = new Map<String, MenuData>();
 
   UserData _user;
+  var grandCost = 0.0;
 
   UserData get user => _user;
 

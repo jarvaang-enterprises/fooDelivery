@@ -7,8 +7,8 @@ class Network {
 
   final JsonDecoder _decoder = new JsonDecoder();
 
-  // static final baseUrl = "http://192.168.43.8:5500";
-  static final baseUrl = "http://10.0.2.2:5500";
+  static final baseUrl = "http://192.168.43.8:5500";
+  // static final baseUrl = "http://10.0.2.2:5500";
 
   // ignore: non_constant_identifier_names
   static final API_VERSION = '/api/v1';
@@ -121,6 +121,62 @@ class Network {
       });
     } catch (e) {
       print(e.toString());
+    }
+  }
+
+  /// Handles all payment requests
+  Future getResponseFromEndpoint(String url) async {
+    try {
+      var response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        print('Error: ${response.body}');
+        return null;
+      }
+    } catch (e) {
+      print('Exception $e');
+      return null;
+    }
+  }
+
+  Future postToEndpointWithBody(String url, Map<String, String> body) async {
+    try {
+      var response = await http.post(url, body: body);
+
+      if (response.statusCode == 200 ||
+          response.statusCode == 201 ||
+          response.statusCode == 204 ||
+          response.statusCode == 206) {
+        print(response.body);
+        return jsonDecode(response.body);
+      } else {
+        print('Error: ${response.statusCode}  response : ${response.body}');
+        return null;
+      }
+    } catch (e) {
+      print('Exception $e');
+      return null;
+    }
+  }
+
+  Future postVerifyOTP(String url) async {
+    try {
+      var response = await http.post(url);
+      if (response.statusCode == 200 ||
+          response.statusCode == 201 ||
+          response.statusCode == 204 ||
+          response.statusCode == 206) {
+        print(response.body);
+        return jsonDecode(response.body);
+      } else {
+        print('Error: ${response.statusCode}  response : ${response.body}');
+        return null;
+      }
+    } catch (e) {
+      print('Exception $e');
+      return null;
     }
   }
 }

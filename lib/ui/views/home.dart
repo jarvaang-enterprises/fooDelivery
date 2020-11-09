@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -15,17 +17,26 @@ import 'package:fooddeliveryboiler/ui/views/login.dart';
 import 'package:fooddeliveryboiler/ui/widgets/appBar.dart';
 import 'package:fooddeliveryboiler/ui/widgets/drawer.dart';
 import 'package:fooddeliveryboiler/ui/widgets/restaurantCard.dart';
+import 'package:fooddeliveryboiler/ui/widgets/spinner.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String routeName = '/';
   final FocusNode searchFocus = new FocusNode();
   final FocusNode telcosFocus = new FocusNode();
+  final FocusNode codeFocus = new FocusNode();
   final GlobalKey<ScaffoldState> _scafflodKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     TextEditingController search = new TextEditingController();
     TextEditingController telcos = new TextEditingController();
+    TextEditingController code = new TextEditingController();
+    bool verified = false;
+    bool mobileCheckDialog = false;
+    SystemChrome.setEnabledSystemUIOverlays([
+      SystemUiOverlay.top,
+      SystemUiOverlay.bottom,
+    ]);
 
     void navigationPage() {
       Route route = MaterialPageRoute(builder: (context) => LoginPage());
@@ -44,10 +55,116 @@ class HomeScreen extends StatelessWidget {
               MaterialPageRoute(builder: (context) => DeliveryScreen())));
     }
 
+    mobileComplete(HomeModel model, BuildContext context) async {
+      model.setViewState(ViewState.Busy);
+      Network _network = model.network;
+      Map<String, String> reqHeaders = {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        'x-api-key': model.user.apiKey
+      };
+      var response = await _network.post('/user/${model.user.uID}/tel',
+          body: json.encode({'mobile': telcos.text}), headers: reqHeaders);
+      if (response['success']) {
+        model.user.tel = telcos.text;
+        model.storage.user = model.user;
+        Navigator.of(context, rootNavigator: true).pop('dialog');
+        Fluttertoast.showToast(msg: response['msg']);
+      } else {
+        Fluttertoast.showToast(msg: response.msg);
+      }
+      model.setViewState(ViewState.Idle);
+    }
+
+    verifyDialog() async {
+      return await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => AlertDialog(
+          title: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: Icon(
+                  Icons.warning_outlined,
+                  size: 35.0,
+                  color: Colors.red,
+                ),
+              ),
+              Text(
+                "Verification Code",
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          content: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Container(
+              height: MediaQuery.of(context).size.height / 6.5,
+              width: double.infinity,
+              child: Column(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Enter verification code",
+                        textAlign: TextAlign.center,
+                      ),
+                      !verified
+                          ? TextField(
+                              controller: code,
+                              focusNode: codeFocus,
+                              keyboardType: TextInputType.number,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 20.0,
+                              ),
+                              autofocus: true,
+                              minLines: 1,
+                              maxLines: 1,
+                              maxLength: 6,
+                            )
+                          : Text("Verification complete"),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            !verified
+                ? TextButton.icon(
+                    onPressed: () {
+                      if (code.text != "")
+                        Navigator.of(context, rootNavigator: true).pop(true);
+                      else
+                        Fluttertoast.showToast(
+                          msg:
+                              "Please input a correct phone number with country code",
+                          toastLength: Toast.LENGTH_LONG,
+                          timeInSecForIos: 3,
+                        );
+                    },
+                    icon: Icon(Icons.check),
+                    label: Text("Verify"),
+                  )
+                : TextButton.icon(
+                    onPressed: () {},
+                    icon: Spinner(icon: FontAwesomeIcons.spinner),
+                    label: Text("Continue"),
+                  ),
+          ],
+        ),
+      );
+    }
+
     mobileCheck(BuildContext context, HomeModel model) async {
       Network _network = model.network;
+      mobileCheckDialog = true;
       return showDialog(
         context: context,
+        barrierDismissible: false,
         builder: (BuildContext context) => AlertDialog(
           // contentPadding: EdgeInsets.symmetric(horizontal: 1.0),
           title: Column(
@@ -101,43 +218,63 @@ class HomeScreen extends StatelessWidget {
             TextButton.icon(
               onPressed: () {
                 if (telcos.text != "" &&
-                    ((telcos.text.length == 10 &&
-                            telcos.text.substring(0, 1) == '0') ||
-                        (telcos.text.length == 13 &&
-                            telcos.text.substring(0, 1) == '+')))
+                    ((telcos.text.length == 13 &&
+                        telcos.text.substring(0, 1) == '+')))
                   Navigator.of(context, rootNavigator: true).pop(true);
                 else
                   Fluttertoast.showToast(
-                    msg: "Please input a correct phone number",
+                    msg:
+                        "Please input a correct phone number with country code",
+                    toastLength: Toast.LENGTH_LONG,
+                    timeInSecForIos: 3,
                   );
               },
               icon: Icon(Icons.check),
-              label: Text("Update"),
+              label: Text("Confirm"),
             ),
           ],
         ),
       ).then((value) async {
         if (value != null) {
           if (value) {
-            Map<String, String> reqHeaders = {
-              'Content-type': 'application/json',
-              'Accept': 'application/json',
-              'x-api-key': model.user.apiKey
-            };
-            var response = await _network.post('/user/${model.user.uID}/tel',
-                body: json.encode({'mobile': telcos.text}),
-                headers: reqHeaders);
-            if (response['success']) {
-              model.user.tel = telcos.text;
-              model.storage.user = model.user;
-              Fluttertoast.showToast(msg: response['msg']);
-            } else {
-              Fluttertoast.showToast(msg: response.msg);
-            }
+            model.setViewState(ViewState.Busy);
+            await FirebaseAuth.instance.verifyPhoneNumber(
+              phoneNumber: telcos.text,
+              timeout: const Duration(seconds: 60),
+              verificationCompleted: (PhoneAuthCredential credential) async {
+                await mobileComplete(model, context);
+                FirebaseAuth.instance.signOut();
+                model.setViewState(ViewState.Idle);
+              },
+              verificationFailed: (FirebaseAuthException e) {
+                model.setViewState(ViewState.Idle);
+                if (e.code == 'invalid-phone-number') {
+                  Fluttertoast.showToast(
+                    msg:
+                        "Please input a correct phone number with country code",
+                    toastLength: Toast.LENGTH_LONG,
+                    timeInSecForIos: 3,
+                  );
+                  mobileCheck(context, model);
+                }
+              },
+              codeSent: (String verificationId, int resendToken) async {
+                await verifyDialog();
+                PhoneAuthCredential phoneAuthCredential =
+                    PhoneAuthProvider.credential(
+                        verificationId: verificationId, smsCode: code.text);
+                UserCredential u = await FirebaseAuth.instance
+                    .signInWithCredential(phoneAuthCredential);
+                FirebaseAuth.instance.signOut();
+                await mobileComplete(model, context);
+                model.setViewState(ViewState.Idle);
+              },
+              codeAutoRetrievalTimeout: (String verificationId) {},
+            );
           }
         } else {
           Fluttertoast.showToast(
-              msg: "You have to enter a number, \n\t Press update");
+              msg: "You have to enter a number, \n\t Press confirm");
           mobileCheck(context, model);
         }
       }).catchError((onError) => print(onError));
@@ -163,8 +300,9 @@ class HomeScreen extends StatelessWidget {
                 msg: "No delivery data!", toastLength: Toast.LENGTH_LONG);
             // redirectUser(context);
           }
-          if (model.user.tel == "") {
-            var _duration = new Duration(milliseconds: 2000);
+          if (model.user.tel == "" && mobileCheckDialog == false) {
+            // mobileCheck(context, model);
+            var _duration = new Duration(milliseconds: 500);
             Timer(_duration, () => mobileCheck(context, model));
           }
           return Scaffold(

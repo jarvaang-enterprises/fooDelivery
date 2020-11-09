@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fooddeliveryboiler/ui/views/home.dart';
@@ -112,23 +110,24 @@ class AppDrawer extends StatelessWidget {
       accountName: Text(model.user.displayName),
       accountEmail: Text(model.user.email),
       currentAccountPicture: CircleAvatar(
-        backgroundColor: Theme.of(context).platform == TargetPlatform.iOS
-            ? Colors.blue
-            : Colors.white,
-        child: model.user.photoUrl == null || model.user.photoUrl == ""
-            ? Padding(
-                padding: const EdgeInsets.only(top: 5.0),
-                child: Text(
-                  model.user.displayName
-                      .split(' ')[0]
-                      .substring(0, 1)
-                      .toUpperCase(),
-                  style: TextStyle(fontSize: 40.0),
-                ),
-              )
-            : Container(),
-        backgroundImage: NetworkImage(model.user.photoUrl ?? "", scale: 1.0),
-      ),
+          backgroundColor: Theme.of(context).platform == TargetPlatform.iOS
+              ? Colors.blue
+              : Colors.white,
+          child: model.user.photoUrl == null || model.user.photoUrl == ""
+              ? Padding(
+                  padding: const EdgeInsets.only(top: 5.0),
+                  child: Text(
+                    model.user.displayName
+                        .split(' ')[0]
+                        .substring(0, 1)
+                        .toUpperCase(),
+                    style: TextStyle(fontSize: 40.0),
+                  ),
+                )
+              : FadeInImage.assetNetwork(
+                  placeholder: 'assets/images/default_avatar.png',
+                  image: model.user.photo ?? "",
+                )),
     );
   }
 

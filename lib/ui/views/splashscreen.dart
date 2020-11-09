@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:fooddeliveryboiler/core/services/localStorage.dart';
 import 'package:fooddeliveryboiler/locator.dart';
 import 'package:fooddeliveryboiler/ui/views/login.dart';
-import 'package:fooddeliveryboiler/ui/widgets/appBar.dart';
 import 'package:http/http.dart' as http;
 
 class SplashScreen extends StatefulWidget {
@@ -28,7 +27,8 @@ class _SplashScreenState extends State<SplashScreen> {
       await Firebase.initializeApp();
       try {
         // await http.get("https://www.example.com");
-        await http.get("http://10.0.2.2:5500/api/v1");
+        // await http.get("http://10.0.2.2:5500/api/v1");
+        await http.get("http://192.168.43.8:5500/api/v1");
       } catch (err) {
         print(err);
         setState(() {

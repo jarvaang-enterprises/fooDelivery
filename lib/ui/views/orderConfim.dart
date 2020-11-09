@@ -33,7 +33,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
 
   refreshOrderData(model) {
     timer = Timer.periodic(Duration(seconds: 5), (timer) {
-      model.refreshOrderData(widget.orderId);
+      if (mounted) model.refreshOrderData(widget.orderId);
     });
   }
 

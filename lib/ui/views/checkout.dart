@@ -29,11 +29,12 @@ class _Checkout extends State<Checkout> {
     super.initState();
   }
 
-  void _calculateTotal(Map<String, MenuData> c) {
+  void _calculateTotal(Map<String, MenuData> c, CheckoutModel model) {
     totalCost = 0.00;
     for (MenuData item in c.values) {
       totalCost += item.price * item.totalItems;
     }
+    model.grandCost = totalCost + deliveryCost;
   }
 
   @override
@@ -44,15 +45,15 @@ class _Checkout extends State<Checkout> {
       onModelReady: (model) {
         model.getCurrentUser();
         model.setCart(widget.cart['items']);
-        if (model.cart.toString().compareTo(widget.cart['items'].toString()) !=
-            0) _calculateTotal(model.cart);
         deliveryCost = (double.parse(model.storage.delivery.dist) / 1000) *
             model.costPerKm;
+        if (model.cart.toString().compareTo(widget.cart['items'].toString()) !=
+            0) _calculateTotal(model.cart, model);
       },
       builder: (context, model, child) {
         if (model.cart.toString().compareTo(widget.cart['items'].toString()) !=
             0) {
-          _calculateTotal(model.cart);
+          _calculateTotal(model.cart, model);
         }
         return Scaffold(
           appBar: appBar(context,
@@ -248,8 +249,7 @@ class _Checkout extends State<Checkout> {
                                           ),
                                           Text(
                                             "UGX. " +
-                                                (deliveryCost + totalCost)
-                                                    .toString(),
+                                                (model.grandCost).toString(),
                                             textAlign: TextAlign.right,
                                             style: TextStyle(
                                               color: Colors.black,

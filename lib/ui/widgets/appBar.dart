@@ -51,6 +51,7 @@ Widget appBar(BuildContext context,
               model.cart.forEach((key, item) {
                 data['items'].add(item);
               });
+              data['grandCost'] = model.grandCost;
               Navigator.pop(context, data);
             } else {
               model.storage.saveCurrentScreen(prev);
