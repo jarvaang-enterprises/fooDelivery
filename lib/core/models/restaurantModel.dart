@@ -1,3 +1,5 @@
+var cat = 0;
+
 class RestaurantData {
   String sId;
   String name;
@@ -8,17 +10,20 @@ class RestaurantData {
   String opensAt;
   String closesAt;
   bool acceptingOrders;
+  String category;
 
-  RestaurantData(
-      {this.sId,
-      this.name,
-      this.imageUrl,
-      this.latitude,
-      this.longitude,
-      this.attributes,
-      this.opensAt,
-      this.closesAt,
-      this.acceptingOrders});
+  RestaurantData({
+    this.sId,
+    this.name,
+    this.imageUrl,
+    this.latitude,
+    this.longitude,
+    this.attributes,
+    this.opensAt,
+    this.closesAt,
+    this.acceptingOrders,
+    this.category,
+  });
 
   RestaurantData.fromJson(Map<String, dynamic> json) {
     sId = json['restaurantId'];
@@ -31,6 +36,7 @@ class RestaurantData {
     closesAt = json['closesAt'];
     acceptingOrders =
         json['accepting_orders'] == null ? true : json['accepting_orders'];
+    category = categories[1];
   }
 
   Map<String, dynamic> toJson() {
@@ -48,3 +54,10 @@ class RestaurantData {
     return data;
   }
 }
+
+var categories = [
+  'Breakfast',
+  'Lunch',
+  'Supper',
+  'Snacks',
+];

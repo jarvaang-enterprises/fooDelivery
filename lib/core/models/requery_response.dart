@@ -21,6 +21,7 @@ class Data {
   String status;
   String flwRef;
   int amount;
+  String accountValidationMessage;
   String currency;
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -28,7 +29,8 @@ class Data {
       return;
     }
     status = json['status'];
-    chargeResponseCode = json['chargeResponseCode'];
+    chargeResponseCode = json['flwMeta']['chargeResponse'];
+    accountValidationMessage = json['flwMeta']['ACCOUNTVALIDATIONRESPMESSAGE'];
     flwRef = json['flwref'];
     amount = json['amount'];
     currency = json['currency'];

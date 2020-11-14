@@ -7,6 +7,7 @@ import 'package:fooddeliveryboiler/core/services/localStorage.dart';
 import 'package:fooddeliveryboiler/core/services/networking.dart';
 import 'package:fooddeliveryboiler/core/viewModels/base.dart';
 import 'package:fooddeliveryboiler/core/viewModels/loginModel.dart';
+import 'package:fooddeliveryboiler/ui/widgets/appBar.dart';
 
 import '../../locator.dart';
 
@@ -20,8 +21,10 @@ class HomeModel extends BaseModel {
   UserData _user;
   DeliveryData _deliveryData;
 
+  // ignore: unnecessary_getters_setters
   DeliveryData get deliveryData => _deliveryData;
 
+  // ignore: unnecessary_getters_setters
   set deliveryData(DeliveryData deliveryData) {
     _deliveryData = deliveryData;
   }
@@ -39,24 +42,55 @@ class HomeModel extends BaseModel {
 
   List<RestaurantData> _homeDataJson;
   List<RestaurantData> _searchDataJson;
+  List<RestaurantData> _categoryDataJson;
 
+  // ignore: unnecessary_getters_setters
   List<RestaurantData> get searchDataJson => _searchDataJson;
+  List<RestaurantData> get categoryDataJson => _categoryDataJson;
 
+  // ignore: unnecessary_getters_setters
   set searchDataJson(List<RestaurantData> searchDataJson) {
     _searchDataJson = searchDataJson;
+  }
+
+  set categoryDataJson(List<RestaurantData> categoryData) {
+    _categoryDataJson = categoryData;
   }
 
   get homeDataJson => _homeDataJson;
 
   bool _isSearch = false;
+  bool isCat = false;
 
+  // ignore: unnecessary_getters_setters
   bool get isSearch => _isSearch;
 
+  // ignore: unnecessary_getters_setters
   set isSearch(bool isSearch) {
     _isSearch = isSearch;
   }
 
   set homeDataJson(data) => _homeDataJson = data;
+
+  void categoryChange(Choice _select) {
+    setViewState(ViewState.Busy);
+    print(_select.title);
+    var num = 0;
+
+    var _category = List<RestaurantData>();
+    for (RestaurantData data in this.homeDataJson) {
+      if (data.category == _select.title) {
+        _category.add(data);
+        num++;
+      }
+      if (num == 10) break;
+    }
+    if (_category.length != 0) {
+      categoryDataJson = _category;
+    } else
+      isCat = false;
+    Timer(Duration(seconds: 2), () => setViewState(ViewState.Idle));
+  }
 
   startTime() async {
     var _duration = new Duration(seconds: 5);

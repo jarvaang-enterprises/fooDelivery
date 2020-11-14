@@ -29,6 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
         // await http.get("https://www.example.com");
         // await http.get("http://10.0.2.2:5500/api/v1");
         await http.get("http://192.168.43.8:5500/api/v1");
+        // await http.get("http://192.168.137.220:5500/api/v1");
       } catch (err) {
         print(err);
         setState(() {

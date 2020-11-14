@@ -29,7 +29,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextEditingController search = new TextEditingController();
-    TextEditingController telcos = new TextEditingController();
+    TextEditingController telecoms = new TextEditingController();
     TextEditingController code = new TextEditingController();
     bool verified = false;
     bool mobileCheckDialog = false;
@@ -64,9 +64,9 @@ class HomeScreen extends StatelessWidget {
         'x-api-key': model.user.apiKey
       };
       var response = await _network.post('/user/${model.user.uID}/tel',
-          body: json.encode({'mobile': telcos.text}), headers: reqHeaders);
+          body: json.encode({'mobile': telecoms.text}), headers: reqHeaders);
       if (response['success']) {
-        model.user.tel = telcos.text;
+        model.user.tel = telecoms.text;
         model.storage.user = model.user;
         Navigator.of(context, rootNavigator: true).pop('dialog');
         Fluttertoast.showToast(msg: response['msg']);
@@ -198,7 +198,7 @@ class HomeScreen extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                       TextField(
-                        controller: telcos,
+                        controller: telecoms,
                         focusNode: telcosFocus,
                         keyboardType: TextInputType.phone,
                         textAlign: TextAlign.center,
@@ -217,9 +217,9 @@ class HomeScreen extends StatelessWidget {
           actions: [
             TextButton.icon(
               onPressed: () {
-                if (telcos.text != "" &&
-                    ((telcos.text.length == 13 &&
-                        telcos.text.substring(0, 1) == '+')))
+                if (telecoms.text != "" &&
+                    ((telecoms.text.length == 13 &&
+                        telecoms.text.substring(0, 1) == '+')))
                   Navigator.of(context, rootNavigator: true).pop(true);
                 else
                   Fluttertoast.showToast(
@@ -239,7 +239,7 @@ class HomeScreen extends StatelessWidget {
           if (value) {
             model.setViewState(ViewState.Busy);
             await FirebaseAuth.instance.verifyPhoneNumber(
-              phoneNumber: telcos.text,
+              phoneNumber: telecoms.text,
               timeout: const Duration(seconds: 60),
               verificationCompleted: (PhoneAuthCredential credential) async {
                 await mobileComplete(model, context);
@@ -301,7 +301,6 @@ class HomeScreen extends StatelessWidget {
             // redirectUser(context);
           }
           if (model.user.tel == "" && mobileCheckDialog == false) {
-            // mobileCheck(context, model);
             var _duration = new Duration(milliseconds: 500);
             Timer(_duration, () => mobileCheck(context, model));
           }
@@ -402,9 +401,11 @@ class HomeScreen extends StatelessWidget {
                             shrinkWrap: true,
                             padding: const EdgeInsets.all(8.0),
                             children: [
-                              for (RestaurantData data in !model.isSearch
-                                  ? model.homeDataJson
-                                  : model.searchDataJson)
+                              for (RestaurantData data in model.isSearch
+                                  ? model.searchDataJson
+                                  : model.isCat
+                                      ? model.categoryDataJson
+                                      : model.homeDataJson)
                                 restaurantCard(context, data, model),
                             ],
                           ),

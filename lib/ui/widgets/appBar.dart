@@ -17,6 +17,10 @@ Widget appBar(BuildContext context,
 
   void _select(Choice choice) {
     _selectedChoice = choice;
+    if (model != null) {
+      model.isCat = true;
+      model.categoryChange(choice);
+    }
   }
 
   void saveOrder(Choice c) {
@@ -96,12 +100,15 @@ Widget appBar(BuildContext context,
         'deliveryModel',
         'profile_model',
         'checkoutModel',
-        'splashScreen'
+        'splashScreen',
+        'menuModel'
       ].contains(
               model != null ? model.storage.getCurrentScreen() : 'splashScreen')
           ? PopupMenuButton<Choice>(
               icon: Icon(
-                Icons.filter_list,
+                model.storage.getCurrentScreen() == 'homeModal' && model.isCat
+                    ? Icons.lunch_dining
+                    : Icons.filter_list,
                 color: Colors.black,
               ),
               onSelected: _select,

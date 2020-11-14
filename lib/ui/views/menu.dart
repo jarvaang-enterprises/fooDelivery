@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:device_id/device_id.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ import 'package:fooddeliveryboiler/ui/views/delivery.dart';
 import 'package:fooddeliveryboiler/ui/views/login.dart';
 import 'package:fooddeliveryboiler/ui/views/orderConfim.dart';
 import 'package:fooddeliveryboiler/ui/widgets/appBar.dart';
+import 'package:fooddeliveryboiler/ui/widgets/custScrollView.dart';
 import 'package:fooddeliveryboiler/ui/widgets/drawer.dart';
 import 'package:fooddeliveryboiler/ui/widgets/menuItem.dart';
 
@@ -54,7 +56,7 @@ class _MenuState extends State<Menu> {
       _queryCount = 0,
       _reQueryTxCount = 0,
       totalCost = 0,
-      _waitDuration = 0;
+      _waitDuration = 2000;
 
   String _validatePhoneNumber(String phone) {
     String pattern = r'(^[0+](?:[0-9] ?){6,14}[0-9]$)';
@@ -78,6 +80,9 @@ class _MenuState extends State<Menu> {
     _userDismissedDialog = dismissedByUser;
     if (mounted) {
       Navigator.of(context, rootNavigator: true).pop('dialog');
+      setState(() {
+        verifying = false;
+      });
     }
   }
 
@@ -133,9 +138,9 @@ class _MenuState extends State<Menu> {
     if (!_userDismissedDialog && _reQueryTxCount < MAX_REQUERY_COUNT) {
       _reQueryTxCount++;
       final requeryRequestBody = {
-        "PBFPubKey": PUBLIC_KEY,
-        'tx_ref': txRef,
-        'SECKEY': SEC_KEY
+        "PBFPubKey": LIVE ? PUBLIC_KEY : TEST_PUBLIC_KEY,
+        'flw_ref': txRef,
+        'SECKEY': LIVE ? SEC_KEY : TEST_SEC_KEY
       };
       var url = LIVE ? ENDPOINT : TEST_ENDPOINT;
       var response = await _network.postToEndpointWithBody(
@@ -257,6 +262,9 @@ class _MenuState extends State<Menu> {
   }
 
   _verifyOTP() async {
+    setState(() {
+      verifying = true;
+    });
     var completeUrl = _recaptchaUrl + "?solution=" + _otpController.text;
     var response = await _network.postVerifyOTP(completeUrl);
     var chargeResponse = ChargeResponse.fromJson(response, true);
@@ -315,7 +323,7 @@ class _MenuState extends State<Menu> {
                       },
                       child: Container(
                         child: Text(
-                          'Verify',
+                          verifying ? 'Verifying ...' : 'Verify',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 18.0,
@@ -339,8 +347,12 @@ class _MenuState extends State<Menu> {
           });
     }
     if (chargeResponse.data != null && chargeResponse.data.flwRef != null) {
-      Timer(Duration(milliseconds: 1000),
-          () => _requeryTx(chargeResponse.data.txRef));
+      Timer(
+        Duration(milliseconds: 20000),
+        () => _requeryTx(
+          chargeResponse.data.flwRef,
+        ),
+      );
     } else {
       if (chargeResponse.status == 'success' &&
           chargeResponse.data.ping_url != null) {
@@ -357,7 +369,7 @@ class _MenuState extends State<Menu> {
       } else if (chargeResponse.status == 'success' &&
           chargeResponse.data.status == 'completed' &&
           chargeResponse.data.flwRef != null) {
-        _requeryTx(chargeResponse.data.txRef);
+        _requeryTx(chargeResponse.data.flwRef);
       } else {
         _showToast(
             context, 'Payment processing failed. Please try again later.');
@@ -371,23 +383,25 @@ class _MenuState extends State<Menu> {
     String deviceId = await DeviceId.getID;
 
     MobileMoneyPayload payload = MobileMoneyPayload(
-      PBFPubKey: PUBLIC_KEY,
+      PBFPubKey: LIVE ? PUBLIC_KEY : TEST_PUBLIC_KEY,
       currency: currency,
       payment_type: paymentType,
       country: receivingCountry,
-      amount: '$totalCost',
+      amount: '500',
       email: user.email,
       phonenumber: phone,
       network: network,
       firstname: user.displayName.split(' ')[0],
       lastname: user.displayName.split(' ')[1],
-      txRef: "MC-" + DateTime.now().toString(),
-      orderRef: "MC-" + DateTime.now().toString(),
+      txRef: "MC-" + DateTime.now().toString().split(' ').join(),
+      orderRef: "MC-" + DateTime.now().toString().split(' ').join(),
       is_mobile_money_ug: '1',
       device_fingerprint: deviceId,
       redirect_url: WEB_HOOK_3DS,
     );
-    var requestBody = payload.encryptJsonPayload(ENCRYPTION_KEY, PUBLIC_KEY);
+    var requestBody = payload.encryptJsonPayload(
+        LIVE ? ENCRYPTION_KEY : TEST_ENCRYPTION_KEY,
+        LIVE ? PUBLIC_KEY : TEST_PUBLIC_KEY);
     var url = LIVE ? ENDPOINT : TEST_ENDPOINT;
     var response = await _network.postToEndpointWithBody(
         '$url$CHARGE_ENDPOINT?use_polling=1', requestBody);
@@ -906,6 +920,7 @@ class _MenuState extends State<Menu> {
           _redirect();
           return Scaffold(
               backgroundColor: Colors.white,
+              resizeToAvoidBottomInset: true,
               body: Center(
                 heightFactor: double.infinity,
                 child: Column(
@@ -932,7 +947,7 @@ class _MenuState extends State<Menu> {
           return Scaffold(
             appBar: appBar(context, backAvailable: true, model: model),
             key: _key,
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.orange,
             drawerEnableOpenDragGesture: true,
             drawer: AppDrawer(
               model: model,
@@ -944,59 +959,198 @@ class _MenuState extends State<Menu> {
                 : SafeArea(
                     child: Stack(
                     children: [
-                      Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: TextField(
-                              controller: search,
-                              style: TextStyle(fontSize: 18),
-                              onSubmitted: (String searchValue) {
-                                if (searchValue != '') {
-                                  model.isSearch = true;
-                                  model.searchData(searchValue);
-                                }
-                              },
-                              decoration: InputDecoration(
-                                contentPadding:
-                                    EdgeInsets.fromLTRB(15, 17, 15, 15),
-                                prefixIcon: Icon(
-                                  Icons.search,
-                                ),
-                                hintText: "Search for dish",
-                                hintStyle: TextStyle(fontSize: 18),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
-                                  borderSide: BorderSide(
-                                      color: Colors.black, width: 1.5),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
-                                  borderSide: BorderSide(
-                                      color: Colors.black.withOpacity(0.4),
-                                      width: 1.5),
+                      Container(
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                top: 20.0,
+                                left: 20.0,
+                                right: 20.0,
+                                bottom: 8.0,
+                              ),
+                              child: TextField(
+                                controller: search,
+                                style: TextStyle(fontSize: 18),
+                                onSubmitted: (String searchValue) {
+                                  if (searchValue != '') {
+                                    model.isSearch = true;
+                                    model.searchData(searchValue);
+                                  }
+                                },
+                                decoration: InputDecoration(
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  contentPadding:
+                                      EdgeInsets.fromLTRB(15, 17, 15, 15),
+                                  prefixIcon: Icon(
+                                    Icons.search,
+                                    semanticLabel: "Search",
+                                  ),
+                                  hintText: "Search for dish",
+                                  hintStyle: TextStyle(fontSize: 18),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(
+                                        10,
+                                      ),
+                                    ),
+                                    borderSide: BorderSide(
+                                      color: Colors.black,
+                                      width: 1.5,
+                                    ),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(
+                                        10,
+                                      ),
+                                    ),
+                                    borderSide: BorderSide(
+                                      color: Colors.black.withOpacity(
+                                        0.4,
+                                      ),
+                                      width: 1.5,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
 
-                          // Menu Cards
-                          /// Breakfast
-                          Expanded(
-                            child: ListView(
-                                scrollDirection: Axis.vertical,
-                                padding: const EdgeInsets.all(8.0),
-                                children: [
-                                  for (var data in !model.isSearch
-                                      ? model.menuData
-                                      : model.searchDataJson)
-                                    MenuItemCard(data: data),
-                                  SizedBox(height: 80),
-                                ]),
-                          ),
-                        ],
+                            // Menu Cards
+                            /// Breakfast
+                            Container(
+                              height: MediaQuery.of(context).size.height - 173,
+                              child: ListView(
+                                  scrollDirection: Axis.vertical,
+                                  padding: const EdgeInsets.all(8.0),
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.teal,
+                                        gradient: LinearGradient(colors: [
+                                          Colors.teal,
+                                          Colors.orange
+                                        ]),
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(5.0),
+                                          bottomLeft: Radius.circular(5.0),
+                                        ),
+                                      ),
+                                      padding: const EdgeInsets.all(
+                                        8.0,
+                                      ),
+                                      child: Text(
+                                        "Breakfast",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 23.0,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                        textAlign: TextAlign.left,
+                                      ),
+                                    ),
+                                    Container(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.3,
+                                      child: ListView(
+                                          scrollDirection: Axis.horizontal,
+                                          children: [
+                                            for (var data in !model.isSearch
+                                                ? model.menuData
+                                                : model.searchDataJson)
+                                              MenuItemCard(data: data),
+                                            SizedBox(height: 80),
+                                          ]),
+                                    ),
+                                    SizedBox(height: 20),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.teal,
+                                        gradient: LinearGradient(colors: [
+                                          Colors.teal,
+                                          Colors.orange
+                                        ]),
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(5.0),
+                                          bottomLeft: Radius.circular(5.0),
+                                        ),
+                                      ),
+                                      padding: const EdgeInsets.all(
+                                        8.0,
+                                      ),
+                                      child: Text(
+                                        "Snacks",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 23.0,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                        textAlign: TextAlign.left,
+                                      ),
+                                    ),
+                                    Container(
+                                      height:
+                                          (MediaQuery.of(context).size.height *
+                                              0.275),
+                                      child: ListView(
+                                        scrollDirection: Axis.horizontal,
+                                        children: [
+                                          for (var data in !model.isSearch
+                                              ? model.menuData
+                                              : model.searchDataJson)
+                                            MenuItemCard(data: data),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 25),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.teal,
+                                        gradient: LinearGradient(colors: [
+                                          Colors.teal,
+                                          Colors.orange
+                                        ]),
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(5.0),
+                                          bottomLeft: Radius.circular(5.0),
+                                        ),
+                                      ),
+                                      padding: const EdgeInsets.all(
+                                        8.0,
+                                      ),
+                                      child: Text(
+                                        "Lunch",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 23.0,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                        textAlign: TextAlign.left,
+                                      ),
+                                    ),
+                                    Container(
+                                      height:
+                                          (MediaQuery.of(context).size.height *
+                                              0.275),
+                                      child: ListView(
+                                        scrollDirection: Axis.horizontal,
+                                        children: [
+                                          for (var data in !model.isSearch
+                                              ? model.menuData
+                                              : model.searchDataJson)
+                                            MenuItemCard(data: data),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 80),
+                                  ]),
+                            )
+                          ],
+                        ),
                       ),
                       model.getCart().length == 0
                           ? Container()
