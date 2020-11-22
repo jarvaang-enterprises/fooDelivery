@@ -679,8 +679,8 @@ class _MenuState extends State<Menu> {
                 ),
                 TextButton.icon(
                   onPressed: () {
-                    _processMtnMM(model.user);
-                    // Navigator.of(context, rootNavigator: true).pop(true);
+                    // _processMtnMM(model.user);
+                    Navigator.of(context, rootNavigator: true).pop(true);
                   },
                   icon: Icon(
                     Icons.check,
@@ -773,92 +773,115 @@ class _MenuState extends State<Menu> {
                     // height: MediaQuery.of(context).size.height / 2.2,
                     // width: MediaQuery.of(context).size.width,
                     child: Column(
-                      children: [
-                        Text(
-                          "Await a call to confirm your order?",
-                          textAlign: TextAlign.center,
-                        ),
-                        Text(
-                          "OR",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 20.0,
-                          ),
-                        ),
-                        Text(
-                          "Initiate payment from MTN Mobile Money to confirm payment of UGX.$totalCost/=?",
-                          textAlign: TextAlign.center,
-                        ),
-                        TextField(
-                          keyboardType: TextInputType.phone,
-                          controller: _phoneController,
-                          decoration: InputDecoration(
-                              errorText: _phoneErrorText,
-                              errorStyle: TextStyle(fontSize: 18.0),
-                              hintText:
-                                  'Mobile Wallet Number e.g. 0772534215 or 0789651241',
-                              hintStyle: TextStyle(
-                                fontSize: 15.0,
-                                color: Colors.grey.shade500,
+                    	children: [
+                      Text(
+                        "Initiate payment from MTN Mobile Money to confirm payment of UGX.$totalCost/=?",
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      TextField(
+                        keyboardType: TextInputType.phone,
+                        controller: _phoneController,
+                        decoration: InputDecoration(
+                            errorText: _phoneErrorText,
+                            errorStyle: TextStyle(fontSize: 18.0),
+                            hintText:
+                                'Mobile Wallet Number e.g. 0772534215 or 0789651241',
+                            hintStyle: TextStyle(
+                              fontSize: 15.0,
+                              color: Colors.grey.shade500,
+                            ),
+                            filled: true,
+                            fillColor: Colors.grey.shade200,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8.0),
                               ),
-                              filled: true,
-                              fillColor: Colors.grey.shade200,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(8.0),
-                                ),
-                                borderSide: BorderSide.none,
-                              )),
-                          onSubmitted: (value) {
-                            print(value);
-                          },
-                        ),
-                        GestureDetector(
-                          onTap: () => _processMtnMM(model.user),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width / 2,
-                            child: Row(
-                              children: [
-                                Image.asset(
-                                  "assets/icons/MTNMMButtonIcon.png",
-                                  width: MediaQuery.of(context).size.width / 4,
-                                ),
-                                Text(
-                                  'PAY',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                            margin: EdgeInsets.only(
-                                left: 32.0,
-                                right: 32.0,
-                                top: 8.0,
-                                bottom: 16.0),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 36.0, vertical: 16.0),
-                            decoration: BoxDecoration(
-                              color: Colors.yellow,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
+                              borderSide: BorderSide.none,
+                            )),
+                        onSubmitted: (value) {
+                          print(value);
+                        },
+                      ),
+                      GestureDetector(
+                        onTap: () => _processMtnMM(model.user),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                'assets/icons/MTNMMButtonIcon.png',
+                                width: (MediaQuery.of(context).size.width / 4) -
+                                    46,
+                                height: 34,
+                                fit: BoxFit.contain,
+                              ),
+                              SizedBox(
+                                width: 10.0,
+                              ),
+                              Text(
+                                'PAY',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                          margin: EdgeInsets.only(
+                              left: 32.0, right: 32.0, top: 8.0, bottom: 16.0),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 26.0, vertical: 10.0),
+                          decoration: BoxDecoration(
+                            color: Colors.yellow,
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                        Text(
-                          "Please continue to process your payment!",
-                          textAlign: TextAlign.center,
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Text(
+                        "OR",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20.0,
                         ),
-                      ],
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Text(
+                        "Continue and await a call to confirm your order?",
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                     ),
                   ),
                 ),
                 actions: [
+                TextButton.icon(
+                  onPressed: () {
+                    Navigator.of(context, rootNavigator: true).pop(null);
+                  },
+                  icon: Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  ),
+                  label: Text(
+                    "Delete Order",
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+                SizedBox(
+                  width: 10.0,
+                ),
                   TextButton.icon(
                     onPressed: () {
-                      _processMtnMM(model.user);
-                      // Navigator.of(context, rootNavigator: true).pop(true);
+                      Navigator.of(context, rootNavigator: true).pop(true);
                     },
                     icon: Icon(Icons.check),
                     label: Text("Yes"),
